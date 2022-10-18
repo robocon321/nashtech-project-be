@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -15,16 +16,22 @@ import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString.Exclude;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "user")
+@EntityListeners(AuditingEntityListener.class)
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +58,7 @@ public class User {
 	private Timestamp birthday;
 	private Boolean sex;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, columnDefinition = "INTEGER DEFAULT 1")
 	private Integer status;
 	
 	@CreatedDate
@@ -64,8 +71,7 @@ public class User {
 	
 	@ManyToMany(
 			mappedBy = "users", 
-			targetEntity = Role.class, 
-			cascade = CascadeType.PERSIST)
+			targetEntity = Role.class)
 	private List<Role> roles;
 	
 	@OneToMany(
