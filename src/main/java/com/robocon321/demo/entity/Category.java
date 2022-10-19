@@ -1,6 +1,7 @@
 package com.robocon321.demo.entity;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -27,7 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "category")
+@Table(name = "`category`")
 @EntityListeners(AuditingEntityListener.class)
 public class Category {
 	@Id
@@ -70,8 +71,8 @@ public class Category {
 	private Category parent;
 	
 	@OneToMany(mappedBy = "parent", targetEntity = Category.class)
-	private List<Category> childs;
+	private List<Category> childs = new ArrayList<>();
 	
 	@ManyToMany(mappedBy = "categories", targetEntity = Product.class)
-	private List<Product> products;
+	private List<Product> products = new ArrayList<>();
 }

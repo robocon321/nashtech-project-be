@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "contact")
+@Table(name = "`contact`")
 @EntityListeners(AuditingEntityListener.class)
 public class Contact {
 	@Id
@@ -34,7 +34,7 @@ public class Contact {
 	@Column(nullable = false, length = 200)
 	private String fullname;
 	
-	@Column(nullable = false, length = 11)
+	@Column(nullable = false, length = 20)
 	private String phone;
 	
 	@Column(nullable = false, length = 255)

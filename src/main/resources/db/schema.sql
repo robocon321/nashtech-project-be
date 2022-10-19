@@ -3,7 +3,7 @@ CREATE TABLE `user` (
 	`username` VARCHAR(100) NOT NULL,
 	`password` VARCHAR(100) NOT NULL,
 	`fullname` VARCHAR(100) NOT NULL,
-	`phone` VARCHAR(11) NOT NULL,
+	`phone` VARCHAR(20) NOT NULL,
 	`email` VARCHAR(255) NOT NULL,
 	`avatar` VARCHAR(2048),
 	`birthday` DATETIME,
@@ -17,7 +17,7 @@ CREATE TABLE `user` (
 CREATE TABLE `contact` (
 	`id` INT PRIMARY KEY AUTO_INCREMENT,
 	`fullname` VARCHAR(200) NOT NULL,
-	`phone` VARCHAR(11) NOT NULL,
+	`phone` VARCHAR(20) NOT NULL,
 	`email` VARCHAR(255) NOT NULL,
 	`province` VARCHAR(40) NOT NULL,
 	`district` VARCHAR(40) NOT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE `order` (
 CREATE TABLE `shipping` (
 	`id` INT PRIMARY KEY AUTO_INCREMENT,
 	`fullname` VARCHAR(200) NOT NULL,
-	`phone` VARCHAR(11) NOT NULL,
+	`phone` VARCHAR(20) NOT NULL,
 	`email` VARCHAR(255) NOT NULL,
 	`province` VARCHAR(40) NOT NULL,
 	`district` VARCHAR(40) NOT NULL,

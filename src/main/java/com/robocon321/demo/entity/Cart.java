@@ -1,6 +1,7 @@
 package com.robocon321.demo.entity;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -26,7 +27,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "cart")
+@Table(name = "`cart`")
 public class Cart {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +52,7 @@ public class Cart {
 			cascade = CascadeType.ALL, 
 			mappedBy = "cart", 
 			targetEntity = CartItem.class)
-	private List<CartItem> cartItems;
+	private List<CartItem> cartItems = new ArrayList<>();
 
 	@OneToOne(
 			cascade = CascadeType.ALL,

@@ -56,7 +56,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 				BeanUtils.copyProperties(role, roleDTO);
 				roleDTOs.add(roleDTO);
 			}
-			
 			dto.setRoleDTOs(roleDTOs);
 			
 			
@@ -68,7 +67,38 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Override
 	public UserDTO insertUser(UserDTO userDTO) {
+		// check exists username, email, phone
+		
+		if(userRepository.existsByUsername(userDTO.getUsername())) {
+			throw new RuntimeException("Your username already existed!");
+		}
+		
+		if(userRepository.existsByEmail(userDTO.getEmail())) {
+			throw new RuntimeException("Your email already registered!");
+		}
+		
+		if(userRepository.existsByPhone(userDTO.getPhone())) {
+			throw new RuntimeException("Your phone already registered!");
+		}
+		
 		User user = new User();
-		return null;
+		BeanUtils.copyProperties(userDTO, user);
+		
+		List<Role> roles = userDTO.getRoleDTOs().stream().map(item -> {
+			Role role = new Role();
+			role.setId(item.getId());
+			return role;
+		}).toList();
+		if(roles.size() == 0) throw new RuntimeException("You aren't specify role account");
+		user.setRoles(roles);
+		user.setStatus(1);
+		user = userRepository.save(user);
+		
+		
+		BeanUtils.copyProperties(user, userDTO);
+		userDTO.setPassword(null);
+		userDTO.setId(null);
+		
+		return userDTO;
 	}
 }

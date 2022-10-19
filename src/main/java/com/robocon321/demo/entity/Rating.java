@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="rating")
+@Table(name="`rating`")
 @EntityListeners(AuditingEntityListener.class)
 public class Rating {
 	@Id

@@ -1,5 +1,7 @@
 package com.robocon321.demo.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.robocon321.demo.dto.LoginDTO;
 import com.robocon321.demo.dto.ResponseObject;
+import com.robocon321.demo.dto.RoleDTO;
 import com.robocon321.demo.dto.UserDTO;
 import com.robocon321.demo.entity.User;
 import com.robocon321.demo.jwt.JwtTokenProvider;
@@ -27,7 +30,7 @@ import com.robocon321.demo.service.UserService;
 import com.robocon321.demo.security.CustomUserDetails;
 
 @RestController
-@RequestMapping("/sign-in")
+@RequestMapping("/")
 public class AuthController {
 	@Autowired
 	AuthenticationManager authenticationManager;
@@ -38,7 +41,7 @@ public class AuthController {
 	@Autowired
 	UserService userService;
 	
-	@PostMapping
+	@PostMapping("/sign-in")
 	public ResponseEntity<ResponseObject> signIn(@Valid @RequestBody LoginDTO dto, BindingResult result) {
 		ResponseObject response = new ResponseObject<>();
 		if(result.hasErrors()) {
@@ -71,7 +74,7 @@ public class AuthController {
 		}
 	}
 
-	@GetMapping
+	@GetMapping("/sign-in")
 	public ResponseEntity<ResponseObject> loadAccount() {
 		ResponseObject response = new ResponseObject<>();
 		
@@ -88,6 +91,35 @@ public class AuthController {
 			return ResponseEntity.status(HttpStatus.OK).body(response);
 		}
 		
+	}
+	
+	@PostMapping("/sign-up")
+	public ResponseEntity<ResponseObject> register(@Valid @RequestBody UserDTO userDTO, BindingResult result) {
+		ResponseObject response = new ResponseObject<>();
+		if(result.hasErrors()) {
+			String message = "";
+			for (ObjectError error : result.getAllErrors()) {
+				message += error.getDefaultMessage() + ". \n";
+			}
+			response.setMessage(message.trim());
+			response.setSuccess(false);
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		} else {
+			try {
+				RoleDTO roleDTO = new RoleDTO();
+				roleDTO.setId(1);
+				userDTO.setRoleDTOs(List.of(roleDTO));
+				UserDTO data = userService.insertUser(userDTO);
+				response.setSuccess(true);
+				response.setMessage("Success!");
+				response.setData(data);
+				return ResponseEntity.status(HttpStatus.OK).body(response);
+			} catch (Exception ex) {
+				response.setMessage(ex.getMessage());
+				response.setSuccess(false);
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+			}
+		}
 	}
 
 	

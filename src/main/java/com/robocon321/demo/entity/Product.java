@@ -1,6 +1,7 @@
 package com.robocon321.demo.entity;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -26,7 +27,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "product")
+@Table(name = "`product`")
 public class Product {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -85,21 +86,21 @@ public class Product {
 	private Timestamp modTime;
 	
 	@ManyToMany(targetEntity = Category.class)
-	@JoinTable(name = "category_product", joinColumns = @JoinColumn(name = "product_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "category_id", nullable = false))
-	private List<Category> categories;
+	@JoinTable(name = "`category_product`", joinColumns = @JoinColumn(name = "product_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "category_id", nullable = false))
+	private List<Category> categories = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "product", targetEntity = ProductImage.class, cascade = CascadeType.ALL)
-	private List<ProductImage> images;
+	private List<ProductImage> images = new ArrayList<>();
 	
 	@OneToMany(
 			cascade = CascadeType.ALL, 
 			mappedBy = "product", 
 			targetEntity = CartItem.class)
-	private List<CartItem> cartItems;
+	private List<CartItem> cartItems = new ArrayList<>();
 	
 	@OneToMany(
 			mappedBy = "product", 
 			targetEntity = Rating.class)
-	private List<Rating> ratings;
+	private List<Rating> ratings = new ArrayList<>();
 
 }

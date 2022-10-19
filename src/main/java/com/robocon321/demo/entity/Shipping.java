@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "shipping")
+@Table(name = "`shipping`")
 @EntityListeners(AuditingEntityListener.class)
 public class Shipping {
 	@Id
@@ -29,7 +29,7 @@ public class Shipping {
 	@Column(nullable = false, length = 200)
 	private String fullname;
 	
-	@Column(nullable = false, length = 11)
+	@Column(nullable = false, length = 20)
 	private String phone;
 	
 	@Column(nullable = false, length = 255)

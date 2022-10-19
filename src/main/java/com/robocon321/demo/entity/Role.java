@@ -1,5 +1,6 @@
 package com.robocon321.demo.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -13,6 +14,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "role")
+@Table(name = "`role`")
 public class Role {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +36,10 @@ public class Role {
 	
 	private String description;
 	
-	@ManyToMany(cascade = CascadeType.PERSIST)
+	@ManyToMany
 	@JoinTable(
-			name = "user_role", 
+			name = "`user_role`", 
 			joinColumns = @JoinColumn(name = "role_id"), 
 			inverseJoinColumns = @JoinColumn(name = "user_id"))
-	private List<User> users;
+	private List<User> users = new ArrayList<>();
 }

@@ -1,6 +1,7 @@
 package com.robocon321.demo.dto;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -23,6 +24,6 @@ public class CategoryDTO {
 	private Timestamp createTime;
 	private Timestamp modTime;
 	private CategoryDTO parent;
-	private List<CategoryDTO> childs;
-	private List<ProductDTO> productDTOs;
+	private List<CategoryDTO> childs = new ArrayList<>();
+	private List<ProductDTO> productDTOs = new ArrayList<>();
 }
