@@ -15,6 +15,9 @@ import com.robocon321.demo.dto.RoleDTO;
 import com.robocon321.demo.dto.UserDTO;
 import com.robocon321.demo.entity.Role;
 import com.robocon321.demo.entity.User;
+import com.robocon321.demo.exception.BadRequestException;
+import com.robocon321.demo.exception.NotImplementedException;
+import com.robocon321.demo.exception.NotfoundException;
 import com.robocon321.demo.repository.UserRepository;
 import com.robocon321.demo.security.CustomUserDetails;
 import com.robocon321.demo.service.UserService;
@@ -29,7 +32,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUsername(username);
 		if(user == null) {
-			throw new UsernameNotFoundException(username);
+			throw new NotfoundException("Username or password is incorrect!");
 		}
 		return new CustomUserDetails(user);
 	}
@@ -37,7 +40,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	public UserDetails loadUserById(int userId) throws UsernameNotFoundException {
 		Optional<User> optional = userRepository.findById(userId);
 		if(optional.isEmpty()) {
-			throw new RuntimeException(userId + " not found");
+			throw new NotfoundException(userId + " not found");
 		}
 		return new CustomUserDetails(optional.get());
 	}
@@ -70,15 +73,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		// check exists username, email, phone
 		
 		if(userRepository.existsByUsername(userDTO.getUsername())) {
-			throw new RuntimeException("Your username already existed!");
+			throw new BadRequestException("Your username already existed!");
 		}
 		
 		if(userRepository.existsByEmail(userDTO.getEmail())) {
-			throw new RuntimeException("Your email already registered!");
+			throw new BadRequestException("Your email already registered!");
 		}
 		
 		if(userRepository.existsByPhone(userDTO.getPhone())) {
-			throw new RuntimeException("Your phone already registered!");
+			throw new BadRequestException("Your phone already registered!");
 		}
 		
 		User user = new User();
@@ -89,7 +92,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 			role.setId(item.getId());
 			return role;
 		}).toList();
-		if(roles.size() == 0) throw new RuntimeException("You aren't specify role account");
+		if(roles.size() == 0) throw new NotImplementedException("You aren't specify role account");
 		user.setRoles(roles);
 		user.setStatus(1);
 		user = userRepository.save(user);
