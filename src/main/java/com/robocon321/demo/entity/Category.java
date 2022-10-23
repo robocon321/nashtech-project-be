@@ -14,11 +14,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.robocon321.demo.type.VisibleType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,16 +37,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Table(name = "`category`")
+@SQLDelete(sql = "UPDATE category SET status = 0 WHERE id = ?")
 @EntityListeners(AuditingEntityListener.class)
 public class Category {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(nullable = false, length = 100)
+	@Column(nullable = false, length = 100, unique = true)
 	private String name;
 	
-	@Column(nullable = false, length = 2048)
+	@Column(nullable = true, length = 2048)
 	private String image;
 	
 	private String description;
@@ -57,6 +66,24 @@ public class Category {
 
 	@Column(nullable = false)
 	private Integer status;
+
+	@Transient
+	private VisibleType visibleType;
+	
+    @PostLoad
+    void fillTransient() {
+        if (status >= 0) {
+            this.visibleType = VisibleType.of(status);
+        }
+    }
+
+    @PrePersist
+    @PreUpdate
+    void fillPersistent() {
+        if (visibleType != null) {
+            this.status = visibleType.getVisible();
+        }
+    }
 	
 	@CreatedDate
 	@Column(nullable = false)
@@ -65,6 +92,9 @@ public class Category {
 	@LastModifiedDate
 	@Column(nullable = false)
 	private Timestamp modTime;
+	
+	@Formula("(select count(*) from category_product where category_product.category_id = id)")
+	private Integer totalProduct;
 	
 	@ManyToOne(targetEntity = Category.class)
 	@JoinColumn(name = "parent_id")
