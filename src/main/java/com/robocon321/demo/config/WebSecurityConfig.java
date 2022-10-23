@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -65,8 +66,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		config.addAllowedMethod("*");
 		config.setAllowedOrigins(List.of("http://localhost:3000"));
 
-		http.authorizeRequests().antMatchers("/**").permitAll().anyRequest()
-        .authenticated().and().csrf().disable().cors().configurationSource(request -> config);
+		http.authorizeRequests()
+		.antMatchers(HttpMethod.POST, "/categories").hasAnyAuthority("ADMIN")
+		.antMatchers(HttpMethod.DELETE, "/categories").hasAnyAuthority("ADMIN")
+		.antMatchers("/**").permitAll()
+		.and().csrf().disable().cors().configurationSource(request -> config);
+
+		
 		http.headers().frameOptions().disable();
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 

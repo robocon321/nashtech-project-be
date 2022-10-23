@@ -15,10 +15,9 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.robocon321.demo.exception.BadRequestException;
 import com.robocon321.demo.jwt.JwtTokenProvider;
 import com.robocon321.demo.service.impl.UserServiceImpl;
-
-import lombok.extern.slf4j.Slf4j;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	@Autowired
@@ -43,7 +42,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 				}
 			}
 		} catch (Exception ex) {
-			throw new RuntimeException("Failed on set user authentication", ex);
+			ex.printStackTrace();
+			throw new BadRequestException("Failed on set user authentication");
 		}
 		filterChain.doFilter(request, response);
 	}

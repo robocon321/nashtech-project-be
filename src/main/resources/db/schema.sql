@@ -1,10 +1,10 @@
 CREATE TABLE `user` (
 	`id` INT PRIMARY KEY AUTO_INCREMENT,
-	`username` VARCHAR(100) NOT NULL,
+	`username` VARCHAR(100) NOT NULL UNIQUE,
 	`password` VARCHAR(100) NOT NULL,
 	`fullname` VARCHAR(100) NOT NULL,
-	`phone` VARCHAR(20) NOT NULL,
-	`email` VARCHAR(255) NOT NULL,
+	`phone` VARCHAR(20) NOT NULL UNIQUE,
+	`email` VARCHAR(255) NOT NULL UNIQUE,
 	`avatar` VARCHAR(2048),
 	`birthday` DATETIME,
 	`sex` BOOLEAN,
@@ -43,7 +43,8 @@ CREATE TABLE `user_role` (
 
 CREATE TABLE `category` (
 	`id` INT PRIMARY KEY AUTO_INCREMENT,
-	`image` VARCHAR(2048) NOT NULL,
+	`name` VARCHAR(100) NOT NULL UNIQUE,
+	`image` VARCHAR(2048),
 	`description` TEXT,
 	`parent_id` INT,
 	`slug` VARCHAR(100) NOT NULL,
