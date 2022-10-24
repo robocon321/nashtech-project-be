@@ -1,4 +1,4 @@
-package com.robocon321.demo.dto;
+package com.robocon321.demo.dto.request;
 
 import javax.validation.constraints.NotBlank;
 

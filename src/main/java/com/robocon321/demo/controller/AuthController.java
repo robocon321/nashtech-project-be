@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.robocon321.demo.dto.LoginDTO;
 import com.robocon321.demo.dto.ResponseObject;
 import com.robocon321.demo.dto.RoleDTO;
 import com.robocon321.demo.dto.UserDTO;
+import com.robocon321.demo.dto.request.LoginDTO;
 import com.robocon321.demo.exception.BadRequestException;
 import com.robocon321.demo.jwt.JwtTokenProvider;
 import com.robocon321.demo.security.CustomUserDetails;

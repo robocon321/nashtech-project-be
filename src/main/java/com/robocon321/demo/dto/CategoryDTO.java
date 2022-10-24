@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.robocon321.demo.dto.response.ProductResponseDTO;
 import com.robocon321.demo.type.VisibleType;
 import com.robocon321.demo.util.ValidatePattern;
 
@@ -51,5 +52,5 @@ public class CategoryDTO {
 	private Integer totalProduct;
 	private CategoryDTO parent;
 	private List<CategoryDTO> childs = new ArrayList<>();
-	private List<ProductDTO> productDTOs = new ArrayList<>();
+	private List<ProductResponseDTO> productDTOs = new ArrayList<>();
 }

@@ -45,6 +45,7 @@ public class CategoryServiceImpl implements CategoryService {
 						spec = specType;
 					} else {
 						if(i == 0) spec = spec.and(specType);
+						else spec = spec.or(specType);
 					}
 				}
 			} else if(keyEntry.startsWith("BT")) {

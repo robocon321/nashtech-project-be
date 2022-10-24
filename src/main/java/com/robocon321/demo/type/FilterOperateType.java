@@ -9,5 +9,6 @@ public enum FilterOperateType {
 	EQUALS,
 	NOT_EQUALS,
 	START_WITH,
-	END_WITH
+	END_WITH,
+	IN
 }
