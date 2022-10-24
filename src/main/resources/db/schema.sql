@@ -60,6 +60,7 @@ CREATE TABLE `category` (
 CREATE TABLE `product` (
 	`id` INT PRIMARY KEY AUTO_INCREMENT,
 	`name` VARCHAR(100) NOT NULL,
+	`thumbnail` VARCHAR(2048) NOT NULL,
 	`real_price` DOUBLE NOT NULL,
 	`sell_price` DOUBLE NOT NULL,
 	`short_description` VARCHAR(512) NOT NULL,
