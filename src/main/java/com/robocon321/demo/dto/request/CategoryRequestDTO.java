@@ -1,25 +1,21 @@
-package com.robocon321.demo.dto;
+package com.robocon321.demo.dto.request;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import com.robocon321.demo.dto.response.ProductResponseDTO;
 import com.robocon321.demo.type.VisibleType;
 import com.robocon321.demo.util.ValidatePattern;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDTO {
+public class CategoryRequestDTO {
 	private Integer id;
 	
 	@NotBlank(message = "Name not blank")
@@ -47,10 +43,6 @@ public class CategoryDTO {
 	private String metaDescription;
 	
 	private VisibleType visibleType;
-	private Timestamp createTime;
-	private Timestamp modTime;
-	private Integer totalProduct;
-	private CategoryDTO parent;
-	private List<CategoryDTO> childs = new ArrayList<>();
-	private List<ProductResponseDTO> productDTOs = new ArrayList<>();
+	private CategoryRequestDTO parent;
+
 }

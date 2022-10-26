@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.robocon321.demo.dto.CartItemDTO;
-import com.robocon321.demo.dto.CategoryDTO;
 import com.robocon321.demo.dto.ProductImageDTO;
 import com.robocon321.demo.dto.RatingDTO;
 import com.robocon321.demo.type.VisibleType;
@@ -39,8 +38,8 @@ public class ProductResponseDTO {
 	private Timestamp modTime;
 	
 	private Double rating;
-	private List<CategoryDTO> categoryDTOs = new ArrayList<>();
-	private List<ProductImageDTO> images = new ArrayList<>();
+	private List<CategoryResponseDTO> categoryDTOs = new ArrayList<>();
+	private List<ProductImageDTO> gallery = new ArrayList<>();
 	private List<CartItemDTO> cartItemDTOs = new ArrayList<>();
 	private List<RatingDTO> ratingDTOs = new ArrayList<>();
 

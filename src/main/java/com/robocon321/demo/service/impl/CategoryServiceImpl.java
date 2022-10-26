@@ -11,8 +11,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import com.robocon321.demo.dto.CategoryDTO;
 import com.robocon321.demo.dto.FilterCriteria;
+import com.robocon321.demo.dto.request.CategoryRequestDTO;
+import com.robocon321.demo.dto.response.CategoryResponseDTO;
 import com.robocon321.demo.entity.Category;
 import com.robocon321.demo.exception.BadRequestException;
 import com.robocon321.demo.exception.ConflictException;
@@ -28,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
 	private CategoryRepository categoryRepository;
 
 	@Override
-	public Page<CategoryDTO> getPage(Integer size, Integer page, String sort,
+	public Page<CategoryResponseDTO> getPage(Integer size, Integer page, String sort,
 			Map<String, String> filter) {
 		Specification<Category> spec = null;
 		for(Map.Entry<String, String> entry : filter.entrySet()) {	
@@ -101,26 +102,27 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 	
 	@Override
-	public CategoryDTO save(CategoryDTO dto) throws BadRequestException{
-		if(categoryRepository.existsByName(dto.getName())) {
+	public CategoryResponseDTO save(CategoryRequestDTO categoryRequestDTO) throws BadRequestException{
+		if(categoryRepository.existsByName(categoryRequestDTO.getName())) {
 			throw new ConflictException("Your category name already exists");
 		}
 
-		if(categoryRepository.existsBySlug(dto.getSlug())) {
+		if(categoryRepository.existsBySlug(categoryRequestDTO.getSlug())) {
 			throw new ConflictException("Your slug already exists");
 		}			
 		Category category = new Category();			
-		BeanUtils.copyProperties(dto, category);
+		BeanUtils.copyProperties(categoryRequestDTO, category);
 		category.setVisibleType(VisibleType.VISIBLE);
 		
 		category = categoryRepository.save(category);
-		BeanUtils.copyProperties(category, dto);
+		CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+		BeanUtils.copyProperties(category, categoryResponseDTO);
 		
-		return dto;
+		return categoryResponseDTO;
 	}
 
 	@Override
-	public List<CategoryDTO> update(List<CategoryDTO> categoryDTOs) {
+	public List<CategoryResponseDTO> update(List<CategoryRequestDTO> categoryDTOs) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -137,7 +139,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public CategoryDTO update(CategoryDTO dto) {
+	public CategoryResponseDTO update(CategoryRequestDTO dto) {
 		if(dto.getId() == null) {
 			throw new BadRequestException("Category must contain id");
 		}
@@ -154,14 +156,15 @@ public class CategoryServiceImpl implements CategoryService {
 		BeanUtils.copyProperties(dto, category);
 		
 		category = categoryRepository.save(category);
-		BeanUtils.copyProperties(category, dto);
+		CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+		BeanUtils.copyProperties(category, categoryResponseDTO);
 		
-		return dto;	
+		return categoryResponseDTO;	
 	}
 
 	@Override
-	public List<CategoryDTO> save(List<CategoryDTO> categoryDTOs) throws BadRequestException{
-		List<Category> categories = categoryDTOs.stream().map(item -> {
+	public List<CategoryResponseDTO> save(List<CategoryRequestDTO> categoryRequestDTOs) throws BadRequestException{
+		List<Category> categories = categoryRequestDTOs.stream().map(item -> {
 			if(categoryRepository.existsByName(item.getName())) {
 				throw new ConflictException("Your category name already exists");
 			}
@@ -182,18 +185,18 @@ public class CategoryServiceImpl implements CategoryService {
 		return entitiesToDTOs(categories);
 	}
 	
-	private Page<CategoryDTO> pageEntityToDTO(Page<Category> page) {
+	private Page<CategoryResponseDTO> pageEntityToDTO(Page<Category> page) {
 		return page.map(category -> entityToDTO(category));
 	}
 	 
-	private List<CategoryDTO> entitiesToDTOs(List<Category> categories) {
+	private List<CategoryResponseDTO> entitiesToDTOs(List<Category> categories) {
 		return categories.stream().map(item -> {
 			return entityToDTO(item);
 		}).toList();
 	}
 	
-	private CategoryDTO entityToDTO(Category category) {
-		CategoryDTO dto = new CategoryDTO();
+	private CategoryResponseDTO entityToDTO(Category category) {
+		CategoryResponseDTO dto = new CategoryResponseDTO();
 		BeanUtils.copyProperties(category, dto);
 		return dto;
 	}

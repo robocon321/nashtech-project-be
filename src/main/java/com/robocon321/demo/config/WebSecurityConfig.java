@@ -13,10 +13,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 
 import com.robocon321.demo.security.JwtAuthenticationFilter;
-import com.robocon321.demo.service.UserService;
 import com.robocon321.demo.service.impl.UserServiceImpl;
 
 @EnableWebSecurity
@@ -78,4 +78,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	}
 
+//    @Bean
+//    public StrictHttpFirewall httpFirewall() {
+//        StrictHttpFirewall firewall = new StrictHttpFirewall();
+//        firewall.setAllowedHeaderNames((header) -> true);
+//        firewall.setAllowedHeaderValues((header) -> true);
+//        firewall.setAllowedParameterNames((parameter) -> true);
+//        return firewall;
+//    }
 }

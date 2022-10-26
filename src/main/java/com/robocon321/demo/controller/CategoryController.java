@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.robocon321.demo.dto.CategoryDTO;
 import com.robocon321.demo.dto.ResponseObject;
+import com.robocon321.demo.dto.request.CategoryRequestDTO;
+import com.robocon321.demo.dto.response.CategoryResponseDTO;
 import com.robocon321.demo.service.CategoryService;
 
 @RestController
@@ -69,7 +68,7 @@ public class CategoryController {
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
 		}
 
-		Page<CategoryDTO> pageResponse = categoryService.getPage(size, page, sort, request);
+		Page<CategoryResponseDTO> pageResponse = categoryService.getPage(size, page, sort, request);
 		response.setData(pageResponse);
 		response.setMessage("Successful!");
 		response.setSuccess(true);
@@ -88,22 +87,22 @@ public class CategoryController {
 	
 	
 	@PostMapping
-	public ResponseEntity<ResponseObject> save(@RequestBody @Valid CategoryDTO dto) {
+	public ResponseEntity<ResponseObject> save(@RequestBody @Valid CategoryRequestDTO dto) {
 		ResponseObject response = new ResponseObject<>();
-		dto = categoryService.save(dto);
+		CategoryResponseDTO data = categoryService.save(dto);
 		response.setMessage("Success");
 		response.setSuccess(true);
-		response.setData(dto);
+		response.setData(data);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 	
 	@PutMapping
-	public ResponseEntity<ResponseObject> update(@RequestBody @Valid CategoryDTO dto) {
+	public ResponseEntity<ResponseObject> update(@RequestBody @Valid CategoryRequestDTO dto) {
 		ResponseObject response = new ResponseObject<>();
-		dto = categoryService.update(dto);
+		CategoryResponseDTO data = categoryService.update(dto);
 		response.setMessage("Success");
 		response.setSuccess(true);
-		response.setData(dto);
+		response.setData(data);
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 	}
 }

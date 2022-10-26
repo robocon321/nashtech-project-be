@@ -1,7 +1,12 @@
 package com.robocon321.demo.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,24 +15,35 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.robocon321.demo.dto.FilterCriteria;
+import com.robocon321.demo.dto.ProductImageDTO;
 import com.robocon321.demo.dto.request.ProductRequestDTO;
 import com.robocon321.demo.dto.response.ProductResponseDTO;
+import com.robocon321.demo.entity.Category;
 import com.robocon321.demo.entity.Product;
+import com.robocon321.demo.entity.ProductImage;
 import com.robocon321.demo.exception.BadRequestException;
 import com.robocon321.demo.exception.ConflictException;
+import com.robocon321.demo.repository.ProductImageRepository;
 import com.robocon321.demo.repository.ProductRepository;
 import com.robocon321.demo.service.ProductService;
 import com.robocon321.demo.specs.ProductSpecification;
 import com.robocon321.demo.type.FilterOperateType;
 import com.robocon321.demo.type.VisibleType;
+import com.robocon321.demo.util.FileUploadUtil;
+import com.robocon321.demo.util.PathContant;
+import com.robocon321.demo.util.SaveFileHelper;
 
 @Service
 public class ProductServiceImpl implements ProductService {
 	
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private ProductImageRepository productImageRepository;	
 
 	@Override
 	public Page<ProductResponseDTO> getPage(Integer size, Integer page, String sort,
@@ -112,59 +128,109 @@ public class ProductServiceImpl implements ProductService {
 		return pageEntityToDTO(pageResponse);
 	}
 	
+	// Init name file thumbnail
+	// Set name thumbnail into product
+	// Save product
+	// Save multipart to folder product id
+	// The same way with images
+	
 	@Override
 	public ProductResponseDTO save(ProductRequestDTO dto) throws BadRequestException{
 		ProductResponseDTO productResponseDTO = new ProductResponseDTO();
 		
+		if(dto.getThumbnail() == null || dto.getThumbnail().isEmpty()) {
+			throw new BadRequestException("Thumbnail not null");
+		}
+		
+		if(!SaveFileHelper.isImage(dto.getThumbnail())) {
+			throw new BadRequestException("Thumbnail incorrect format image");
+		}
+		
+		if(dto.getId() != null) {
+			throw new BadRequestException("Id must be null");
+		}
+		
 		if(productRepository.existsBySlug(dto.getSlug())) {
 			throw new ConflictException("Your slug already exists");
-		}			
-		Product product = new Product();			
+		}
+				
+		// set thumbnail into product entity
+		Product product = new Product();
+		
+		String thumbnail = UUID.randomUUID().toString() + "-" + SaveFileHelper.getNameMultipart(dto.getThumbnail());	
+		
 		BeanUtils.copyProperties(dto, product);
 		product.setVisibleType(VisibleType.VISIBLE);
+		product.setThumbnail(thumbnail);
+		
+		// set category
+		
+		List<Category> categories = new ArrayList<>();
+		for(Integer categoryId: dto.getCategories()) {
+			Category category = new Category();
+			category.setId(categoryId);
+			categories.add(category);			
+		}
+		
+		product.setCategories(categories);
+		
+		// set images into product entity
+		
+		List<ProductImage> images = new ArrayList<>();
+		
+		for(MultipartFile multipartFile: dto.getGallery()) {	
+			if(!SaveFileHelper.isImage(multipartFile)) {
+				throw new BadRequestException("Image incorrect format image");
+			}
+			if(multipartFile != null || !multipartFile.isEmpty()) {				
+				String image = UUID.randomUUID().toString() + "-" + SaveFileHelper.getNameMultipart(multipartFile);
+				images.add(new ProductImage(null, product, image));
+			}			
+		}
+		product.setGallery(images);
+		
+		// save product
 		
 		product = productRepository.save(product);
 		BeanUtils.copyProperties(product, productResponseDTO);
 		
+		String pathThumbnailId = PathContant.PATH_PRODUCT_THUMBNAIL + product.getId();
+		String pathImageId = PathContant.PATH_PRODUCT_IMAGES + product.getId();
+
+		FileUploadUtil.cleanDir(pathThumbnailId);
+		FileUploadUtil.cleanDir(pathImageId);
+		
+		SaveFileHelper.saveMultipart(dto.getThumbnail(), pathThumbnailId, thumbnail);
+		
+		for(int i = 0; i < images.size(); i ++) {			
+			SaveFileHelper.saveMultipart(dto.getGallery().get(i), pathImageId, images.get(i).getImage());
+		}
+
+		// set image response dto
+		
+		List<ProductImageDTO> productImageDTOs = new ArrayList<>();
+		
+		for(ProductImage productImage : product.getGallery()) {
+			ProductImageDTO productImageDTO = new ProductImageDTO();
+			BeanUtils.copyProperties(productImage, productImageDTO);
+			productImageDTOs.add(productImageDTO);
+		}
+		productResponseDTO.setGallery(productImageDTOs);
+		
 		return productResponseDTO;
 	}
 
-	@Override
-	public List<ProductResponseDTO> update(List<ProductRequestDTO> ProductRequestDTOs) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public boolean delete(List<Integer> ids) throws BadRequestException {
-		try {
+		try {			
 			productRepository.deleteAllById(ids);
 			return true;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new BadRequestException("Can not delete!");
 		}
-	}
-
-	@Override
-	public ProductResponseDTO update(ProductRequestDTO productRequestDTO) {
-		ProductResponseDTO productResponseDTO = new ProductResponseDTO();
-		
-		if(productRequestDTO.getId() == null) {
-			throw new BadRequestException("Product must contain id");
-		}
-
-		if(productRepository.existsBySlugAndIdNot(productRequestDTO.getSlug(), productRequestDTO.getId())) {
-			throw new ConflictException("Your slug already exists");
-		}
-				
-		Product product = new Product();
-		BeanUtils.copyProperties(productRequestDTO, product);
-		
-		product = productRepository.save(product);
-		BeanUtils.copyProperties(product, productResponseDTO);
-		
-		return productResponseDTO;	
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.robocon321.demo.handler;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -48,7 +49,16 @@ public class ApiExceptionHandler {
 		return new ResponseObject(false, message, null);
 	}
 	
-	
+	@ExceptionHandler(BindException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	public ResponseObject argumentNotValidMultipartExceptionHandler(BindException ex, WebRequest request) {
+		String message = "";
+		for (FieldError error : ex.getFieldErrors()) {
+			message += error.getDefaultMessage() + ". \n";
+		}
+
+		return new ResponseObject(false, message, null);
+	}
 	// Status 500
 	
 	@ExceptionHandler(NotImplementedException.class)

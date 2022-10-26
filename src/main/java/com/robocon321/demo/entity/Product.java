@@ -60,6 +60,7 @@ public class Product {
 	@Column(nullable = false, length = 512)
 	private String description;
 
+	@Column(columnDefinition = "TEXT")
 	private String fullDescription;
 	
 	@Column(nullable = false)
@@ -133,7 +134,7 @@ public class Product {
 	private List<Category> categories = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "product", targetEntity = ProductImage.class, cascade = CascadeType.ALL)
-	private List<ProductImage> images = new ArrayList<>();
+	private List<ProductImage> gallery = new ArrayList<>();
 	
 	@OneToMany(
 			cascade = CascadeType.ALL, 
