@@ -38,9 +38,9 @@ public class ProductResponseDTO {
 	private Timestamp modTime;
 	
 	private Double rating;
-	private List<CategoryResponseDTO> categoryDTOs = new ArrayList<>();
+	private List<CategoryResponseDTO> categories = new ArrayList<>();
 	private List<ProductImageDTO> gallery = new ArrayList<>();
-	private List<CartItemDTO> cartItemDTOs = new ArrayList<>();
-	private List<RatingDTO> ratingDTOs = new ArrayList<>();
+	private List<CartItemDTO> cartItems = new ArrayList<>();
+	private List<RatingDTO> ratings = new ArrayList<>();
 
 }

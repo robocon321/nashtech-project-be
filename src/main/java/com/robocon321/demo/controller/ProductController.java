@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -93,6 +94,23 @@ public class ProductController {
 		response.setSuccess(true);
 		return ResponseEntity.ok(response);
 	}
+	
+	@PutMapping(consumes = {"multipart/form-data"})
+	public ResponseEntity<ResponseObject> put(@Valid @ModelAttribute ProductRequestDTO productRequestDTO) {
+		ResponseObject response = new ResponseObject<>();
+		response.setData(productService.update(productRequestDTO));
+		response.setMessage("Success");
+		response.setSuccess(true);
+		return ResponseEntity.ok(response);
+	}
 
+	@GetMapping("category/{slug}")
+	public ResponseEntity<ResponseObject> getBySlugWithCategory(@PathVariable("slug") String slug) {
+		ResponseObject response = new ResponseObject<>();
+		response.setData(productService.getBySlugWithCategory(slug));
+		response.setMessage("Success");
+		response.setSuccess(true);
+		return ResponseEntity.ok(response);
+	}
 
 }

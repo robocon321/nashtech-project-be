@@ -1,8 +1,7 @@
 package com.robocon321.demo.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -17,4 +16,5 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
 	boolean existsByName(String name);
 	boolean existsByNameAndIdNot(String name, Integer id);	
 
+	Optional<Product> findOneBySlug(String slug);
 }

@@ -20,12 +20,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.robocon321.demo.dto.FilterCriteria;
 import com.robocon321.demo.dto.ProductImageDTO;
 import com.robocon321.demo.dto.request.ProductRequestDTO;
+import com.robocon321.demo.dto.response.CategoryResponseDTO;
 import com.robocon321.demo.dto.response.ProductResponseDTO;
 import com.robocon321.demo.entity.Category;
 import com.robocon321.demo.entity.Product;
 import com.robocon321.demo.entity.ProductImage;
 import com.robocon321.demo.exception.BadRequestException;
 import com.robocon321.demo.exception.ConflictException;
+import com.robocon321.demo.exception.NotfoundException;
 import com.robocon321.demo.repository.ProductImageRepository;
 import com.robocon321.demo.repository.ProductRepository;
 import com.robocon321.demo.service.ProductService;
@@ -220,6 +222,119 @@ public class ProductServiceImpl implements ProductService {
 		return productResponseDTO;
 	}
 
+	// If thumbnail is null, get old thumbnail url to save
+	// If thumbnail not null, use new image
+	// The same way with images
+	
+	@Override
+	public ProductResponseDTO update(ProductRequestDTO productRequestDTO) {
+		ProductResponseDTO productResponseDTO = new ProductResponseDTO();
+		
+		if(productRequestDTO.getId() == null) {
+			throw new BadRequestException("Id not found");
+		}	
+		
+		if(productRepository.existsBySlugAndIdNot(productRequestDTO.getSlug(), productRequestDTO.getId())) {
+			throw new ConflictException("Your slug already exists");
+		}
+		
+		Optional<Product> productOldOptional = productRepository.findById(productRequestDTO.getId());
+		if(productOldOptional.isPresent()) {
+			Product productOld = productOldOptional.get();
+			Product product = new Product();			
+
+			// set thumbnail into product entity
+			
+			String thumbnail = "";
+
+			if(productRequestDTO.getThumbnail() == null || productRequestDTO.getThumbnail().isEmpty()) {
+				thumbnail = productOld.getThumbnail();
+			} else {
+				if(!SaveFileHelper.isImage(productRequestDTO.getThumbnail())) {
+					throw new BadRequestException("Thumbnail incorrect format image");
+				}
+
+				thumbnail = UUID.randomUUID().toString() + "-" + SaveFileHelper.getNameMultipart(productRequestDTO.getThumbnail());								
+			}
+			
+			BeanUtils.copyProperties(productRequestDTO, product);
+			product.setThumbnail(thumbnail);
+			
+			
+			// set images into product entity
+			
+			List<ProductImage> images = new ArrayList<>();
+
+			if(productRequestDTO.getGallery().size() == 0) {
+				images = product.getGallery();
+			} else {				
+				for(MultipartFile multipartFile: productRequestDTO.getGallery()) {
+					if(!SaveFileHelper.isImage(multipartFile)) {
+						throw new BadRequestException("Image incorrect format image");
+					}
+
+					if(multipartFile != null || !multipartFile.isEmpty()) {
+						String image = UUID.randomUUID().toString() + "-" + SaveFileHelper.getNameMultipart(multipartFile);
+						images.add(new ProductImage(null, product, image));						
+					}
+				}
+				product.setGallery(images);
+			}
+			
+			// set create time product entity
+			
+			product.setCreateTime(productOld.getCreateTime());
+			
+			// set category product entity
+			
+			List<Category> categories = new ArrayList<>();
+			for(Integer categoryId: productRequestDTO.getCategories()) {
+				Category category = new Category();
+				category.setId(categoryId);
+				categories.add(category);			
+			}
+			
+			product.setCategories(categories);
+			
+			// save product
+			
+			productImageRepository.deleteAll();
+			product = productRepository.save(product);
+			BeanUtils.copyProperties(product, productResponseDTO);
+			
+			if(productRequestDTO.getThumbnail() != null && !productRequestDTO.getThumbnail().isEmpty()) {
+				String pathThumbnailId = PathContant.PATH_PRODUCT_THUMBNAIL + product.getId();
+				FileUploadUtil.cleanDir(pathThumbnailId);
+				SaveFileHelper.saveMultipart(productRequestDTO.getThumbnail(), pathThumbnailId, thumbnail);				
+			} 
+			
+			if(productRequestDTO.getGallery().size() != 0) {
+				String pathImageId = PathContant.PATH_PRODUCT_IMAGES + product.getId();
+				FileUploadUtil.cleanDir(pathImageId);
+				
+				
+				for(int i = 0; i < images.size(); i ++) {			
+					SaveFileHelper.saveMultipart(productRequestDTO.getGallery().get(i), pathImageId, images.get(i).getImage());
+				}				
+			}
+
+			// set image response dto
+			
+			List<ProductImageDTO> productImageDTOs = new ArrayList<>();
+			
+			for(ProductImage productImage : product.getGallery()) {
+				ProductImageDTO productImageDTO = new ProductImageDTO();
+				BeanUtils.copyProperties(productImage, productImageDTO);
+				productImageDTOs.add(productImageDTO);
+			}
+			productResponseDTO.setGallery(productImageDTOs);
+			
+			return productResponseDTO;			
+		} else {
+			throw new BadRequestException("Id not found");
+		}
+		
+	}
 
 
 	@Override
@@ -234,22 +349,13 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public List<ProductResponseDTO> save(List<ProductRequestDTO> productRequestDTOs) throws BadRequestException{
-		List<Product> products = productRequestDTOs.stream().map(item -> {
-			if(productRepository.existsBySlug(item.getSlug())) {
-				throw new ConflictException("Your slug already exists");
-			}		
-			
-			Product product = new Product();			
-			BeanUtils.copyProperties(item, product);
-			product.setVisibleType(VisibleType.VISIBLE);
-			product.setId(null);
-			return product;
-		}).toList();
-		
-		products = productRepository.saveAll(products);
-		
-		return entitiesToDTOs(products);
+	public ProductResponseDTO getBySlugWithCategory(String slug) {
+		Optional<Product> optional = productRepository.findOneBySlug(slug);
+		if(optional.isPresent()) {
+			return entityToDTOWithCategory(optional.get());
+		} else {
+			throw new NotfoundException("Not found your product");
+		}
 	}
 	
 	private Page<ProductResponseDTO> pageEntityToDTO(Page<Product> page) {
@@ -266,6 +372,23 @@ public class ProductServiceImpl implements ProductService {
 		ProductResponseDTO dto = new ProductResponseDTO();
 		BeanUtils.copyProperties(product, dto);
 		return dto;
+	}
+
+	private ProductResponseDTO entityToDTOWithCategory(Product product) {
+		ProductResponseDTO dto = new ProductResponseDTO();
+		BeanUtils.copyProperties(product, dto);
+		
+		List<Category> categories = product.getCategories();
+		List<CategoryResponseDTO> categoryResponseDTOs = new ArrayList<>();
+		for(Category category : categories) {
+			CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+			BeanUtils.copyProperties(category, categoryResponseDTO);
+			categoryResponseDTOs.add(categoryResponseDTO);
+		}
+		
+		dto.setCategories(categoryResponseDTOs);
+		return dto;
+		
 	}
 
 }

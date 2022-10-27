@@ -107,7 +107,7 @@ public class Product {
     @PreUpdate
     void fillPersistent() {
         if (visibleType != null) {
-            this.status = visibleType.getVisible();
+            this.status = this.visibleType.getVisible();
         }
     }
 	    
