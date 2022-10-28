@@ -49,6 +49,6 @@ public class Shipping {
 	
 	@OneToOne(
 			mappedBy = "shipping", 
-			targetEntity = Order.class)
-	private Order order;
+			targetEntity = Transaction.class)
+	private Transaction order;
 }

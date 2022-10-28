@@ -122,12 +122,14 @@ public class Product {
 	@Formula("(select AVG(rating.star) from rating where rating.product_id = id)")
 	private Double rating;
 
-//	@Formula("(select sum(quantity) from product pr "
-//			+ "join cart_item ct on pr.id = ct.product_id "
-//			+ "join cart ca on ca.id = ct.cart_id "
-//			+ "join `order` od on od.cart_id = ca.id "
-//			+ "where pr.id = id)")
-//	private Integer order;
+	@Formula("(select sum(ci.quantity) from product pr "
+			+ "join cart_item ci on pr.id = ci.product_id "
+			+ "join cart ca on ca.id = ci.cart_id "
+			+ "join transaction od on od.cart_id = ca.id "
+			+ "where pr.id = id "
+			+ "group by pr.id)")
+
+	private Integer order;
 	
 	@ManyToMany(targetEntity = Category.class)
 	@JoinTable(name = "`category_product`", joinColumns = @JoinColumn(name = "product_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "category_id", nullable = false))

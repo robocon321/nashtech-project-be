@@ -70,9 +70,9 @@ public class ProductSpecification {
 					return builder.like(join.get(field), "%" + criteria.getValue());
 				case END_WITH:
 					return builder.like(join.get(field), criteria.getValue() + "%");
-//				case IN:
-//					String[] values = criteria.getValue().toString().split(",");
-//					return builder.in(join.get(field)).in(values);
+				case IN:
+					String[] values = criteria.getValue().toString().split(",");
+					return join.get(field).in(values);
 				default:
 					throw new NotImplementedException("Operation not supported yet");
 			}
@@ -117,9 +117,9 @@ public class ProductSpecification {
 					return builder.like(root.<String>get(criteria.getField()), criteria.getValue() + "%");
 				case END_WITH:
 					return builder.like(root.<String>get(criteria.getField()), "%" + criteria.getValue());
-//				case IN:
-//					String[] values = criteria.getValue().toString().split(",");
-//					return builder.in(root.<String>get(criteria.getField())).in(values);
+				case IN:
+					String[] values = criteria.getValue().toString().split(",");
+					return root.<String>get(criteria.getField()).in(values);
 				default:
 					throw new NotImplementedException("Operation not supported yet");
 				}

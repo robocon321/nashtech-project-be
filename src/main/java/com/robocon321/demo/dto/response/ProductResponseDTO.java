@@ -37,6 +37,7 @@ public class ProductResponseDTO {
 	private Timestamp createTime;
 	private Timestamp modTime;
 	
+	private Integer order;
 	private Double rating;
 	private List<CategoryResponseDTO> categories = new ArrayList<>();
 	private List<ProductImageDTO> gallery = new ArrayList<>();

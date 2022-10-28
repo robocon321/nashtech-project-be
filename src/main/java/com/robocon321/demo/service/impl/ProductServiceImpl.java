@@ -100,15 +100,15 @@ public class ProductServiceImpl implements ProductService {
 					spec = spec.and(ProductSpecification.filter(new FilterCriteria(field, FilterOperateType.LIKE, valueEntry)));
 				}
 			} 
-//			else if(keyEntry.startsWith("IN")) {
-//				String field = keyEntry.substring(3);
-//				if(spec == null) {
-//					spec = ProductSpecification.filter(new FilterCriteria(field, FilterOperateType.IN, valueEntry));
-//				} else {
-//					spec = spec.and(ProductSpecification.filter(new FilterCriteria(field, FilterOperateType.IN, valueEntry)));
-//				}
-//				
-//			}
+			else if(keyEntry.startsWith("IN")) {
+				String field = keyEntry.substring(3);
+				if(spec == null) {
+					spec = ProductSpecification.filter(new FilterCriteria(field, FilterOperateType.IN, valueEntry));
+				} else {
+					spec = spec.and(ProductSpecification.filter(new FilterCriteria(field, FilterOperateType.IN, valueEntry)));
+				}
+				
+			}
 			else {
 				continue;								
 			}

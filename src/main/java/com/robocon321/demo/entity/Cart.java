@@ -57,6 +57,6 @@ public class Cart {
 	@OneToOne(
 			cascade = CascadeType.ALL,
 			mappedBy = "cart", 
-			targetEntity = Order.class)
-	private Order order;
+			targetEntity = Transaction.class)
+	private Transaction order;
 }

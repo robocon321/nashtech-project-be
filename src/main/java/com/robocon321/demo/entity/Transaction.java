@@ -24,9 +24,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="`order`")
+@Table(name="`transaction`")
 @EntityListeners(AuditingEntityListener.class)
-public class Order {
+public class Transaction {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;

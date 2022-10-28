@@ -120,7 +120,7 @@ CREATE TABLE `cart_item` (
 );
 
 
-CREATE TABLE `order` (
+CREATE TABLE `transaction` (
 	`id` INT PRIMARY KEY AUTO_INCREMENT,
 	`cart_id` INT NOT NULL,
 	`shipping_id` INT NOT NULL,

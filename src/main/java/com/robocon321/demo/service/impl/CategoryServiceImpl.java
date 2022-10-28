@@ -20,6 +20,7 @@ import com.robocon321.demo.exception.ConflictException;
 import com.robocon321.demo.repository.CategoryRepository;
 import com.robocon321.demo.service.CategoryService;
 import com.robocon321.demo.specs.CategorySpecification;
+import com.robocon321.demo.specs.ProductSpecification;
 import com.robocon321.demo.type.FilterOperateType;
 import com.robocon321.demo.type.VisibleType;
 
@@ -80,7 +81,16 @@ public class CategoryServiceImpl implements CategoryService {
 				} else {
 					spec = spec.and(CategorySpecification.filter(new FilterCriteria(field, FilterOperateType.LIKE, valueEntry)));
 				}
-			} else {
+			} 
+			else if(keyEntry.startsWith("IN")) {
+				String field = keyEntry.substring(3);
+				if(spec == null) {
+					spec = CategorySpecification.filter(new FilterCriteria(field, FilterOperateType.IN, valueEntry));
+				} else {
+					spec = spec.and(CategorySpecification.filter(new FilterCriteria(field, FilterOperateType.IN, valueEntry)));
+				}
+				
+			}else {
 				continue;								
 			}
 		}

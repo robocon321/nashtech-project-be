@@ -675,24 +675,24 @@ insert into shipping (id, fullname, phone, email, province, district, ward, deta
 
 
 
--- start order(11)
+-- start transaction(11)
 
 
 
-insert into `order` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (1, 10, 1, 5696592, 22692, 0, '2022/06/19');
-insert into `order` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (2, 11, 2, 8524906, 25249, 2, '2022/04/06');
-insert into `order` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (3, 12, 3, 2933716, 27581, 0, '2022/05/01');
-insert into `order` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (4, 13, 4, 5747679, 65020, 1, '2022/03/10');
-insert into `order` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (5, 14, 5, 5938798, 55788, 2, '2021/11/18');
-insert into `order` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (6, 15, 6, 5825354, 21737, 1, '2022/03/26');
-insert into `order` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (7, 16, 7, 5666144, 99231, 1, '2022/06/20');
-insert into `order` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (8, 17, 8, 4980320, 22957, 2, '2022/05/20');
-insert into `order` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (9, 18, 9, 9245713, 65987, 1, '2022/09/15');
-insert into `order` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (10, 19, 10, 4499995, 21621, 0, '2022/04/17');
-insert into `order` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (11, 20, 11, 8362224, 53786, 1, '2021/12/02');
+insert into `transaction` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (1, 10, 1, 5696592, 22692, 0, '2022/06/19');
+insert into `transaction` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (2, 11, 2, 8524906, 25249, 2, '2022/04/06');
+insert into `transaction` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (3, 12, 3, 2933716, 27581, 0, '2022/05/01');
+insert into `transaction` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (4, 13, 4, 5747679, 65020, 1, '2022/03/10');
+insert into `transaction` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (5, 14, 5, 5938798, 55788, 2, '2021/11/18');
+insert into `transaction` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (6, 15, 6, 5825354, 21737, 1, '2022/03/26');
+insert into `transaction` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (7, 16, 7, 5666144, 99231, 1, '2022/06/20');
+insert into `transaction` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (8, 17, 8, 4980320, 22957, 2, '2022/05/20');
+insert into `transaction` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (9, 18, 9, 9245713, 65987, 1, '2022/09/15');
+insert into `transaction` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (10, 19, 10, 4499995, 21621, 0, '2022/04/17');
+insert into `transaction` (id, cart_id, shipping_id, product_price, ship_price, status, create_time) values (11, 20, 11, 8362224, 53786, 1, '2021/12/02');
 
 
--- end order
+-- end transaction
 
 
 
