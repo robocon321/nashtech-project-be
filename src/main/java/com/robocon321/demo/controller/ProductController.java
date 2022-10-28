@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.robocon321.demo.dto.ResponseObject;
 import com.robocon321.demo.dto.request.ProductRequestDTO;
 import com.robocon321.demo.dto.response.ProductResponseDTO;
+import com.robocon321.demo.dto.response.ResponseObject;
 import com.robocon321.demo.exception.BadRequestException;
 import com.robocon321.demo.service.ProductService;
 
@@ -112,5 +112,4 @@ public class ProductController {
 		response.setSuccess(true);
 		return ResponseEntity.ok(response);
 	}
-
 }

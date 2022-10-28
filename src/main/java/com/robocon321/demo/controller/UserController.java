@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.robocon321.demo.dto.ResponseObject;
+import com.robocon321.demo.dto.response.ResponseObject;
 import com.robocon321.demo.entity.Role;
 import com.robocon321.demo.repository.RoleRepository;
 import com.robocon321.demo.repository.UserRepository;

@@ -1,4 +1,6 @@
-package com.robocon321.demo.dto;
+package com.robocon321.demo.dto.response;
+
+import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ShippingDTO {
+public class ContactResponseDTO {
 	private Integer id;
 	private String fullname;
 	private String phone;
@@ -16,5 +18,7 @@ public class ShippingDTO {
 	private String district;
 	private String ward;
 	private String detail;
-	private OrderDTO orderDTO;
+	private Timestamp createTime;
+	private Timestamp modTime;
+	private UserResponseDTO userResponseDTO;
 }

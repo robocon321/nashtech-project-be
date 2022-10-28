@@ -6,8 +6,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,9 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.robocon321.demo.dto.FilterCriteria;
-import com.robocon321.demo.dto.ProductImageDTO;
 import com.robocon321.demo.dto.request.ProductRequestDTO;
 import com.robocon321.demo.dto.response.CategoryResponseDTO;
+import com.robocon321.demo.dto.response.ProductImageResponseDTO;
 import com.robocon321.demo.dto.response.ProductResponseDTO;
 import com.robocon321.demo.entity.Category;
 import com.robocon321.demo.entity.Product;
@@ -210,10 +208,10 @@ public class ProductServiceImpl implements ProductService {
 
 		// set image response dto
 		
-		List<ProductImageDTO> productImageDTOs = new ArrayList<>();
+		List<ProductImageResponseDTO> productImageDTOs = new ArrayList<>();
 		
 		for(ProductImage productImage : product.getGallery()) {
-			ProductImageDTO productImageDTO = new ProductImageDTO();
+			ProductImageResponseDTO productImageDTO = new ProductImageResponseDTO();
 			BeanUtils.copyProperties(productImage, productImageDTO);
 			productImageDTOs.add(productImageDTO);
 		}
@@ -320,10 +318,10 @@ public class ProductServiceImpl implements ProductService {
 
 			// set image response dto
 			
-			List<ProductImageDTO> productImageDTOs = new ArrayList<>();
+			List<ProductImageResponseDTO> productImageDTOs = new ArrayList<>();
 			
 			for(ProductImage productImage : product.getGallery()) {
-				ProductImageDTO productImageDTO = new ProductImageDTO();
+				ProductImageResponseDTO productImageDTO = new ProductImageResponseDTO();
 				BeanUtils.copyProperties(productImage, productImageDTO);
 				productImageDTOs.add(productImageDTO);
 			}

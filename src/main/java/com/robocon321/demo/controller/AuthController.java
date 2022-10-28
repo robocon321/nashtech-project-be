@@ -19,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.robocon321.demo.dto.ResponseObject;
-import com.robocon321.demo.dto.RoleDTO;
-import com.robocon321.demo.dto.UserDTO;
 import com.robocon321.demo.dto.request.LoginDTO;
+import com.robocon321.demo.dto.request.UserRequestDTO;
+import com.robocon321.demo.dto.response.ResponseObject;
+import com.robocon321.demo.dto.response.RoleResponseDTO;
+import com.robocon321.demo.dto.response.UserResponseDTO;
 import com.robocon321.demo.exception.BadRequestException;
 import com.robocon321.demo.jwt.JwtTokenProvider;
 import com.robocon321.demo.security.CustomUserDetails;
@@ -63,7 +64,7 @@ public class AuthController {
 		ResponseObject response = new ResponseObject<>();
 		
 		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		UserDTO dto = userService.findUserByIdWithRole(userDetails.getUser().getId());
+		UserResponseDTO dto = userService.findUserByIdWithRole(userDetails.getUser().getId());
 		if(dto == null) {
 			throw new BadRequestException("Not found user");
 		} else {
@@ -76,12 +77,11 @@ public class AuthController {
 	}
 	
 	@PostMapping("/sign-up")
-	public ResponseEntity<ResponseObject> register(@Valid @RequestBody UserDTO userDTO, BindingResult result) {
+	public ResponseEntity<ResponseObject> register(@Valid @RequestBody UserRequestDTO userResponseDTO, BindingResult result) {
 		ResponseObject response = new ResponseObject<>();
-		RoleDTO roleDTO = new RoleDTO();
-		roleDTO.setId(1);
-		userDTO.setRoleDTOs(List.of(roleDTO));
-		UserDTO data = userService.insertUser(userDTO);
+		// insert role to user
+		String[] roles = {"CLIENT"};
+		UserResponseDTO data = userService.insertUser(userResponseDTO, roles);
 		response.setSuccess(true);
 		response.setMessage("Success!");
 		response.setData(data);

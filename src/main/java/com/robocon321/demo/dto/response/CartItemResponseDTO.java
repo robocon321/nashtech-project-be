@@ -1,6 +1,4 @@
-package com.robocon321.demo.dto;
-
-import com.robocon321.demo.dto.response.ProductResponseDTO;
+package com.robocon321.demo.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartItemDTO {
+public class CartItemResponseDTO {
 	private Integer id;
 	private Integer quantity;
-	private CartDTO cartDTO;
+	private CartResponseDTO cartResponseDTO;
 	private ProductResponseDTO productDTO;	
 }

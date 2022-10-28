@@ -11,13 +11,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.robocon321.demo.dto.RoleDTO;
-import com.robocon321.demo.dto.UserDTO;
+import com.robocon321.demo.dto.request.UserRequestDTO;
+import com.robocon321.demo.dto.response.RoleResponseDTO;
+import com.robocon321.demo.dto.response.UserResponseDTO;
 import com.robocon321.demo.entity.Role;
 import com.robocon321.demo.entity.User;
 import com.robocon321.demo.exception.BadRequestException;
 import com.robocon321.demo.exception.NotImplementedException;
 import com.robocon321.demo.exception.NotfoundException;
+import com.robocon321.demo.repository.RoleRepository;
 import com.robocon321.demo.repository.UserRepository;
 import com.robocon321.demo.security.CustomUserDetails;
 import com.robocon321.demo.service.UserService;
@@ -28,6 +30,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private RoleRepository roleRepository;
+		
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUsername(username);
@@ -46,62 +51,66 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserDTO findUserByIdWithRole(Integer userId) {
+	public UserResponseDTO findUserByIdWithRole(Integer userId) {
 		Optional<User> optional = userRepository.findById(userId);
 		if(optional.isPresent()) {
-			User user = optional.get();
-			UserDTO dto = new UserDTO();
-			BeanUtils.copyProperties(user, dto);
-			
-			List<RoleDTO> roleDTOs = new ArrayList<>();
-			for(Role role : user.getRoles()) {
-				RoleDTO roleDTO = new RoleDTO();
-				BeanUtils.copyProperties(role, roleDTO);
-				roleDTOs.add(roleDTO);
-			}
-			dto.setRoleDTOs(roleDTOs);
-			
-			
-			return dto;
+			return entityToDTOWithRole(optional.get());
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public UserDTO insertUser(UserDTO userDTO) {
+	public UserResponseDTO insertUser(UserRequestDTO requestDTO, String[] roleNames) {
 		// check exists username, email, phone
 		
-		if(userRepository.existsByUsername(userDTO.getUsername())) {
+		if(userRepository.existsByUsername(requestDTO.getUsername())) {
 			throw new BadRequestException("Your username already existed!");
 		}
 		
-		if(userRepository.existsByEmail(userDTO.getEmail())) {
+		if(userRepository.existsByEmail(requestDTO.getEmail())) {
 			throw new BadRequestException("Your email already registered!");
 		}
 		
-		if(userRepository.existsByPhone(userDTO.getPhone())) {
+		if(userRepository.existsByPhone(requestDTO.getPhone())) {
 			throw new BadRequestException("Your phone already registered!");
 		}
 		
 		User user = new User();
-		BeanUtils.copyProperties(userDTO, user);
+		BeanUtils.copyProperties(requestDTO, user);
 		
-		List<Role> roles = userDTO.getRoleDTOs().stream().map(item -> {
-			Role role = new Role();
-			role.setId(item.getId());
-			return role;
-		}).toList();
-		if(roles.size() == 0) throw new NotImplementedException("You aren't specify role account");
-		user.setRoles(roles);
-		user.setStatus(1);
+		List<Role> roles = new ArrayList<>();
+		
+		for(String roleName: roleNames) {
+			Optional<Role> optional = roleRepository.findOneByName(roleName);
+			if(optional.isPresent()) roles.add(optional.get());
+			else throw new NotImplementedException("Not found role " + roleName);
+		}
+
 		user = userRepository.save(user);
+				
+		return entityToDTO(user);
+	}
+	
+	private UserResponseDTO entityToDTO(User user) {
+		UserResponseDTO userResponseDTO = new UserResponseDTO();
+		BeanUtils.copyProperties(user, userResponseDTO);
+		return userResponseDTO;
+	}
+
+	private UserResponseDTO entityToDTOWithRole(User user) {
+		UserResponseDTO dto = new UserResponseDTO();
+		BeanUtils.copyProperties(user, dto);
+		
+		List<RoleResponseDTO> roleResponseDTOs = new ArrayList<>();
+		for(Role role : user.getRoles()) {
+			RoleResponseDTO roleResponseDTO = new RoleResponseDTO();
+			BeanUtils.copyProperties(role, roleResponseDTO);
+			roleResponseDTOs.add(roleResponseDTO);
+		}
+		dto.setRoles(roleResponseDTOs);
 		
 		
-		BeanUtils.copyProperties(user, userDTO);
-		userDTO.setPassword(null);
-		userDTO.setId(null);
-		
-		return userDTO;
+		return dto;
 	}
 }

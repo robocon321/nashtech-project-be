@@ -1,4 +1,4 @@
-package com.robocon321.demo.dto;
+package com.robocon321.demo.dto.response;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartDTO {
+public class CartResponseDTO {
 	private Integer id;
 	private Integer status;
 	private Timestamp createTime;
 	private Timestamp modTime;
-	private UserDTO userDTO;
-	private List<CartItemDTO> cartItemDTOs = new ArrayList<>();
-	private OrderDTO orderDTO;
+	private UserResponseDTO userResponseDTO;
+	private List<CartItemResponseDTO> cartItemResponseDTOs = new ArrayList<>();
+	private OrderResponseDTO orderResponseDTO;
 }

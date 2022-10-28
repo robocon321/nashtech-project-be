@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import com.robocon321.demo.dto.ResponseObject;
+import com.robocon321.demo.dto.response.ResponseObject;
 import com.robocon321.demo.exception.BadRequestException;
 import com.robocon321.demo.exception.ConflictException;
 import com.robocon321.demo.exception.NotImplementedException;

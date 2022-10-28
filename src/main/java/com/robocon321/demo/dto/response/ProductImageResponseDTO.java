@@ -1,4 +1,4 @@
-package com.robocon321.demo.dto;
+package com.robocon321.demo.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SettingDTO {
+public class ProductImageResponseDTO {
 	private Integer id;
-	private String key;
-	private String value;
+	private ProductResponseDTO productDTO;
+	private String image;
 }

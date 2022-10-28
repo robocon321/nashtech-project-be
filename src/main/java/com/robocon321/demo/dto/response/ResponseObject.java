@@ -1,4 +1,4 @@
-package com.robocon321.demo.dto;
+package com.robocon321.demo.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.robocon321.demo.dto.ResponseObject;
 import com.robocon321.demo.dto.request.CategoryRequestDTO;
 import com.robocon321.demo.dto.response.CategoryResponseDTO;
+import com.robocon321.demo.dto.response.ResponseObject;
 import com.robocon321.demo.service.CategoryService;
 
 @RestController

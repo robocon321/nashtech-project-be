@@ -1,4 +1,4 @@
-package com.robocon321.demo.dto;
+package com.robocon321.demo.dto.response;
 
 import java.sql.Timestamp;
 
@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderDTO {
+public class OrderResponseDTO {
 	private Integer id;
 	private Double productPrice;
 	private Double shipPrice;
 	private Integer status;
 	private Timestamp createTime;
-	private ShippingDTO shippingDTO;
-	private CartDTO cartDTO;
+	private ShippingResponseDTO shippingResponseDTO;
+	private CartResponseDTO cartResponseDTO;
 }

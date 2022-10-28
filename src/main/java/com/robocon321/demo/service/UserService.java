@@ -1,8 +1,9 @@
 package com.robocon321.demo.service;
 
-import com.robocon321.demo.dto.UserDTO;
+import com.robocon321.demo.dto.request.UserRequestDTO;
+import com.robocon321.demo.dto.response.UserResponseDTO;
 
 public interface UserService {
-	UserDTO findUserByIdWithRole(Integer userId);
-	UserDTO insertUser(UserDTO userDTO);
+	UserResponseDTO findUserByIdWithRole(Integer userId);
+	UserResponseDTO insertUser(UserRequestDTO userResponseDTO, String[] roleName);
 }

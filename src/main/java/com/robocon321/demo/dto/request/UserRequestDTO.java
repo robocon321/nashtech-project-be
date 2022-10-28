@@ -1,4 +1,5 @@
-package com.robocon321.demo.dto;
+package com.robocon321.demo.dto.request;
+
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {	
+public class UserRequestDTO {	
 	private Integer id;
 
 	@NotBlank(message = "Username not blank")
@@ -50,8 +51,4 @@ public class UserDTO {
 	private Integer status;
 	private Timestamp createTime;
 	private Timestamp modTime;
-	private List<RoleDTO> roleDTOs = new ArrayList<>();
-	private List<ContactDTO> contactDTOs = new ArrayList<>();
-	private List<CartDTO> cartDTOs = new ArrayList<>();
-	private List<RatingDTO> ratingDTOs = new ArrayList<>();
 }

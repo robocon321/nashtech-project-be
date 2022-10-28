@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
-import com.robocon321.demo.dto.ResponseObject;
+import com.robocon321.demo.dto.response.ResponseObject;
 
 public class BadRequestException extends RuntimeException {
 
