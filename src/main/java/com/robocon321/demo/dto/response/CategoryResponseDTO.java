@@ -28,6 +28,6 @@ public class CategoryResponseDTO {
 	private Integer totalProduct;
 	private CategoryResponseDTO parent;
 	private List<CategoryResponseDTO> childs = new ArrayList<>();
-	private List<ProductResponseDTO> productDTOs = new ArrayList<>();
+	private List<ProductResponseDTO> products = new ArrayList<>();
 
 }

@@ -14,6 +14,6 @@ public class RatingResponseDTO {
 	private Integer star;
 	private String content;
 	private Timestamp createTime;
-	private UserResponseDTO userResponseDTO;
-	private ProductResponseDTO productDTO;
+	private UserResponseDTO user;
+	private ProductResponseDTO product;
 }
