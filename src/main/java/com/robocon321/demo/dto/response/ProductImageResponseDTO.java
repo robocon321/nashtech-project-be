@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProductImageResponseDTO {
 	private Integer id;
-	private ProductResponseDTO productDTO;
+	private ProductResponseDTO product;
 	private String image;
 }
