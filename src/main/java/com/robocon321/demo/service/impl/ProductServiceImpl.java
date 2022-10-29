@@ -52,6 +52,8 @@ public class ProductServiceImpl implements ProductService {
 			String keyEntry = entry.getKey();
 			String valueEntry = entry.getValue();
 			
+			if(valueEntry.equals("")) continue;
+			
 			if(keyEntry.startsWith("OR")) {
 				String field = keyEntry.substring(3);
 				String[] values = valueEntry.split(",");
@@ -397,7 +399,7 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public ProductResponseDTO getBySlugWithCategory_ProductImage(String slug) {
-		Optional<Product> optional = productRepository.findOneBySlug(slug);
+		Optional<Product> optional = productRepository.findOneBySlugAndStatus(slug, 1);
 		if(optional.isPresent()) {
 			return entityToDTOWithCategory_ProductImage(optional.get());
 		} else {

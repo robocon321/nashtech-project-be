@@ -2,16 +2,20 @@ package com.robocon321.demo.controller;
 
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.robocon321.demo.dto.response.CategoryResponseDTO;
+import com.robocon321.demo.dto.request.RatingRequestDTO;
 import com.robocon321.demo.dto.response.RatingResponseDTO;
 import com.robocon321.demo.dto.response.ResponseObject;
 import com.robocon321.demo.service.RatingService;
@@ -116,5 +120,14 @@ public class RatingController {
 
 		return ResponseEntity.status(HttpStatus.OK).body(response);
 
+	}
+
+	@PostMapping
+	public ResponseEntity<ResponseObject> post(@RequestBody @Valid RatingRequestDTO ratingRequestDTO) {
+		ResponseObject response = new ResponseObject<>();
+		response.setData(ratingService.save(ratingRequestDTO));
+		response.setSuccess(true);
+		response.setMessage("Success!");
+		return ResponseEntity.ok(response);
 	}
 }

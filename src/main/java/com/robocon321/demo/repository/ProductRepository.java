@@ -17,4 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Integer>, JpaS
 	boolean existsByNameAndIdNot(String name, Integer id);	
 
 	Optional<Product> findOneBySlug(String slug);
+	Optional<Product> findOneByIdAndStatus(Integer id, Integer status);
+	Optional<Product> findOneBySlugAndStatus(String slug, Integer status);
 }

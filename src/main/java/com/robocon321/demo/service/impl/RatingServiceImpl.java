@@ -2,6 +2,7 @@ package com.robocon321.demo.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,14 +10,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.robocon321.demo.dto.FilterCriteria;
+import com.robocon321.demo.dto.request.RatingRequestDTO;
 import com.robocon321.demo.dto.response.RatingResponseDTO;
 import com.robocon321.demo.dto.response.UserResponseDTO;
+import com.robocon321.demo.entity.Product;
 import com.robocon321.demo.entity.Rating;
 import com.robocon321.demo.entity.User;
+import com.robocon321.demo.exception.BadRequestException;
+import com.robocon321.demo.exception.NotfoundException;
+import com.robocon321.demo.repository.ProductRepository;
 import com.robocon321.demo.repository.RatingRepository;
+import com.robocon321.demo.security.CustomUserDetails;
 import com.robocon321.demo.service.RatingService;
 import com.robocon321.demo.specs.RatingSpecification;
 import com.robocon321.demo.type.FilterOperateType;
@@ -25,7 +33,10 @@ import com.robocon321.demo.type.FilterOperateType;
 public class RatingServiceImpl implements RatingService {
 	@Autowired
 	private RatingRepository ratingRepository;
-
+	
+	@Autowired
+	private ProductRepository productRepository;
+	
 	private Page<Rating> getPageEntity(Integer size, Integer page, String sort,
 			Map<String, String> filter) {
 		Specification<Rating> spec = null;
@@ -144,6 +155,32 @@ public class RatingServiceImpl implements RatingService {
 	public Page<RatingResponseDTO> getPageWithUser(Integer size, Integer page, String sort,
 			Map<String, String> filter) {
 		return pageEntityToDTOWithUser(getPageEntity(size, page, sort, filter));
+	}
+
+	@Override
+	public RatingResponseDTO save(RatingRequestDTO ratingRequestDTO) {
+		CustomUserDetails customUserDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = customUserDetails.getUser();
+		if(user == null) {
+			throw new BadRequestException("Your session invalid");
+		} else {			
+			Optional<Product> optional = productRepository.findOneByIdAndStatus(ratingRequestDTO.getProductId(), 1);
+			if(optional.isEmpty()) {
+				throw new NotfoundException("Not found your product");				
+			} else {
+				if(ratingRepository.existsByUserIdAndProductId(user.getId(), ratingRequestDTO.getProductId())) {
+					throw new BadRequestException("You already review this product");
+				} else {
+					Rating rating = new Rating();
+					BeanUtils.copyProperties(ratingRequestDTO, rating);
+					rating.setProduct(optional.get());
+					rating.setUser(user);
+					
+					rating = ratingRepository.save(rating);
+					return entityToDTOWithUser(rating);
+				}
+			}
+		}
 	}
 
 }

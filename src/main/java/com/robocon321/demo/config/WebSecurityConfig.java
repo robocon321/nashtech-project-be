@@ -69,6 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 		.antMatchers(HttpMethod.POST, "/categories").hasAnyAuthority("ADMIN")
 		.antMatchers(HttpMethod.DELETE, "/categories").hasAnyAuthority("ADMIN")
+		.antMatchers(HttpMethod.POST, "/ratings").hasAnyAuthority("CLIENT")
 		.antMatchers("/**").permitAll()
 		.and().csrf().disable().cors().configurationSource(request -> config);
 
