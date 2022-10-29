@@ -78,6 +78,24 @@ public class ProductController {
 
 	}
 
+	@GetMapping("category/{slug}")
+	public ResponseEntity<ResponseObject> getBySlugWithCategory(@PathVariable("slug") String slug) {
+		ResponseObject response = new ResponseObject<>();
+		response.setData(productService.getBySlugWithCategory(slug));
+		response.setMessage("Success");
+		response.setSuccess(true);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("category/product_image/{slug}")
+	public ResponseEntity<ResponseObject> getBySlugWithCategory_ProductImage(@PathVariable("slug") String slug) {
+		ResponseObject response = new ResponseObject<>();
+		response.setData(productService.getBySlugWithCategory_ProductImage(slug));
+		response.setMessage("Success");
+		response.setSuccess(true);
+		return ResponseEntity.ok(response);
+	}
+	
 	@DeleteMapping
 	public ResponseEntity<ResponseObject> delete(@RequestBody List<Integer> ids) {
 		ResponseObject response = new ResponseObject<>();
@@ -104,12 +122,4 @@ public class ProductController {
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("category/{slug}")
-	public ResponseEntity<ResponseObject> getBySlugWithCategory(@PathVariable("slug") String slug) {
-		ResponseObject response = new ResponseObject<>();
-		response.setData(productService.getBySlugWithCategory(slug));
-		response.setMessage("Success");
-		response.setSuccess(true);
-		return ResponseEntity.ok(response);
-	}
 }

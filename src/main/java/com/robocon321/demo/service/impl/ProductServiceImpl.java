@@ -45,8 +45,7 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private ProductImageRepository productImageRepository;	
 
-	@Override
-	public Page<ProductResponseDTO> getPage(Integer size, Integer page, String sort,
+	private Page<ProductResponseDTO> getPageEntity(Integer size, Integer page, String sort,
 			Map<String, String> filter) {
 		Specification<Product> spec = null;
 		for(Map.Entry<String, String> entry : filter.entrySet()) {	
@@ -345,16 +344,6 @@ public class ProductServiceImpl implements ProductService {
 			throw new BadRequestException("Can not delete!");
 		}
 	}
-
-	@Override
-	public ProductResponseDTO getBySlugWithCategory(String slug) {
-		Optional<Product> optional = productRepository.findOneBySlug(slug);
-		if(optional.isPresent()) {
-			return entityToDTOWithCategory(optional.get());
-		} else {
-			throw new NotfoundException("Not found your product");
-		}
-	}
 	
 	private Page<ProductResponseDTO> pageEntityToDTO(Page<Product> page) {
 		return page.map(product -> entityToDTO(product));
@@ -372,6 +361,22 @@ public class ProductServiceImpl implements ProductService {
 		return dto;
 	}
 
+	@Override
+	public Page<ProductResponseDTO> getPage(Integer size, Integer page, String sort, Map<String, String> filter) {
+		return getPageEntity(size, page, sort, filter);
+	}
+
+
+	@Override
+	public ProductResponseDTO getBySlugWithCategory(String slug) {
+		Optional<Product> optional = productRepository.findOneBySlug(slug);
+		if(optional.isPresent()) {
+			return entityToDTOWithCategory(optional.get());
+		} else {
+			throw new NotfoundException("Not found your product");
+		}
+	}
+
 	private ProductResponseDTO entityToDTOWithCategory(Product product) {
 		ProductResponseDTO dto = new ProductResponseDTO();
 		BeanUtils.copyProperties(product, dto);
@@ -384,6 +389,43 @@ public class ProductServiceImpl implements ProductService {
 			categoryResponseDTOs.add(categoryResponseDTO);
 		}
 		
+		dto.setCategories(categoryResponseDTOs);
+		return dto;
+		
+	}
+
+
+	@Override
+	public ProductResponseDTO getBySlugWithCategory_ProductImage(String slug) {
+		Optional<Product> optional = productRepository.findOneBySlug(slug);
+		if(optional.isPresent()) {
+			return entityToDTOWithCategory_ProductImage(optional.get());
+		} else {
+			throw new NotfoundException("Not found your product");
+		}		
+	}
+
+	private ProductResponseDTO entityToDTOWithCategory_ProductImage(Product product) {
+		ProductResponseDTO dto = new ProductResponseDTO();
+		BeanUtils.copyProperties(product, dto);
+		
+		List<Category> categories = product.getCategories();
+		List<CategoryResponseDTO> categoryResponseDTOs = new ArrayList<>();
+		for(Category category : categories) {
+			CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
+			BeanUtils.copyProperties(category, categoryResponseDTO);
+			categoryResponseDTOs.add(categoryResponseDTO);
+		}
+		
+		List<ProductImage> productImages = product.getGallery();
+		
+		List<ProductImageResponseDTO> productImageDTOs = productImages.stream().map(item -> {
+			ProductImageResponseDTO productImageResponseDTO = new ProductImageResponseDTO();
+			BeanUtils.copyProperties(item, productImageResponseDTO);
+			return productImageResponseDTO;
+		}).toList();
+		
+		dto.setGallery(productImageDTOs);
 		dto.setCategories(categoryResponseDTOs);
 		return dto;
 		
