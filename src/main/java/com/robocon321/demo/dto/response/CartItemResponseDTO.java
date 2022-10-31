@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class CartItemResponseDTO {
 	private Integer id;
 	private Integer quantity;
-	private CartResponseDTO cartResponseDTO;
-	private ProductResponseDTO productDTO;	
+	private CartResponseDTO cart;
+	private ProductResponseDTO product;	
 }

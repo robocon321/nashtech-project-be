@@ -70,6 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.POST, "/categories").hasAnyAuthority("ADMIN")
 		.antMatchers(HttpMethod.DELETE, "/categories").hasAnyAuthority("ADMIN")
 		.antMatchers(HttpMethod.POST, "/ratings").hasAnyAuthority("CLIENT")
+		.antMatchers(HttpMethod.GET, "/carts").hasAnyAuthority("CLIENT", "ADMIN")
 		.antMatchers("/**").permitAll()
 		.and().csrf().disable().cors().configurationSource(request -> config);
 
