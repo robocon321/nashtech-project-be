@@ -62,9 +62,11 @@ public class CartItemServiceImpl implements CartItemService {
 		else {
 			product = productOpt.get();
 			if(product.getStock() < requestDTO.getQuantity()) {
+				System.out.println(10);
 				throw new BadRequestException("Your quantity bigger our stock");
 			}
 		}
+		System.out.println(20);
 		
 		cartItem.setProduct(product);
 		cartItem = cartItemRepository.save(cartItem);
@@ -115,15 +117,17 @@ public class CartItemServiceImpl implements CartItemService {
 			if(user.getId() != cart.getUser().getId()) {
 				throw new BadRequestException("You're not allowed to update this cart item");
 			} else {
+				Product product = cartItem.getProduct();
+
+				if(product.getStock() < cartItemRequestDTO.getQuantity()) throw new BadRequestException("Quantity must be less or equal stock");
+
 				BeanUtils.copyProperties(cartItemRequestDTO, cartItem);
 				cartItem = cartItemRepository.save(cartItem);
 				
 				CartItemResponseDTO cartItemResponseDTO = new CartItemResponseDTO();
 				BeanUtils.copyProperties(cartItem, cartItemResponseDTO);
 				
-				Product product = cartItem.getProduct();
 
-				if(product.getStock() < cartItemRequestDTO.getQuantity()) throw new BadRequestException("Quantity must be less or equal stock");
 				ProductResponseDTO productResponseDTO = new ProductResponseDTO();
 				BeanUtils.copyProperties(product, productResponseDTO);
 				

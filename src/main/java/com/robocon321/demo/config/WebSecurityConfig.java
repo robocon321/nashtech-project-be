@@ -62,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		CorsConfiguration config = new CorsConfiguration();
 
 		config.setAllowCredentials(true);
-		config.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+		config.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type", "token"));
 		config.addAllowedMethod("*");
 		config.setAllowedOrigins(List.of("http://localhost:3000"));
 
@@ -70,6 +70,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.POST, "/categories").hasAnyAuthority("ADMIN")
 		.antMatchers(HttpMethod.DELETE, "/categories").hasAnyAuthority("ADMIN")
 		.antMatchers(HttpMethod.POST, "/ratings").hasAnyAuthority("CLIENT")
+		.antMatchers("/contacts").hasAnyAuthority("CLIENT")
 		.antMatchers(HttpMethod.GET, "/carts").hasAnyAuthority("CLIENT", "ADMIN")
 		.antMatchers("/**").permitAll()
 		.and().csrf().disable().cors().configurationSource(request -> config);

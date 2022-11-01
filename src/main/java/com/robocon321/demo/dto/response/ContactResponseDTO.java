@@ -20,5 +20,5 @@ public class ContactResponseDTO {
 	private String detail;
 	private Timestamp createTime;
 	private Timestamp modTime;
-	private UserResponseDTO userResponseDTO;
+	private UserResponseDTO user;
 }
