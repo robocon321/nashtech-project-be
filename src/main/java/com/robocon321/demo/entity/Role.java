@@ -36,10 +36,8 @@ public class Role {
 	
 	private String description;
 	
-	@ManyToMany
-	@JoinTable(
-			name = "`user_role`", 
-			joinColumns = @JoinColumn(name = "role_id"), 
-			inverseJoinColumns = @JoinColumn(name = "user_id"))
+	@ManyToMany(
+			mappedBy = "roles", 
+			targetEntity = User.class)	
 	private List<User> users = new ArrayList<>();
 }

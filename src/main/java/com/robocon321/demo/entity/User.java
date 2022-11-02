@@ -11,6 +11,8 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -68,9 +70,11 @@ public class User {
 	@Column(nullable = false)
 	private Timestamp modTime;
 	
-	@ManyToMany(
-			mappedBy = "users", 
-			targetEntity = Role.class)
+	@ManyToMany
+	@JoinTable(
+			name = "`user_role`", 
+			joinColumns = @JoinColumn(name = "user_id"), 
+			inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private List<Role> roles = new ArrayList<>();
 	
 	@OneToMany(

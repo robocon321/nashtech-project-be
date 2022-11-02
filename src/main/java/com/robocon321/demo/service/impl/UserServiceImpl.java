@@ -72,7 +72,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserResponseDTO insertUser(UserRequestDTO requestDTO, String[] roleNames) {
+	public UserResponseDTO insertUser(UserRequestDTO requestDTO, String[] roleNames) {		
+		if(requestDTO.getId() == null) throw new BadRequestException("Id must be null");
 		// check exists username, email, phone
 
 		if (userRepository.existsByUsername(requestDTO.getUsername())) {
@@ -94,11 +95,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 		for (String roleName : roleNames) {
 			Optional<Role> optional = roleRepository.findOneByName(roleName);
-			if (optional.isPresent())
-				roles.add(optional.get());
+			if (optional.isPresent()) {
+				Role role = optional.get();
+				roles.add(role);
+			}
 			else
 				throw new NotImplementedException("Not found role " + roleName);
 		}
+		user.setRoles(roles);
+		user.setStatus(1);
 
 		user = userRepository.save(user);
 
