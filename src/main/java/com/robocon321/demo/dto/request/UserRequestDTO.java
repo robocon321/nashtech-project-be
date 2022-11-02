@@ -40,15 +40,11 @@ public class UserRequestDTO {
 	@Size(min = 5, max = 50, message = "Size email >= 5 and <= 50")
 	private String email;
 	
-	
-	@NotBlank(message = "Password not blank")
-	@Size(min = 6, max = 20, message = "Size password >= 6 and <= 20")
 	private String password;
 	
 	private String avatar;
 	private Timestamp birthday;
 	private Boolean sex;
 	private Integer status;
-	private Timestamp createTime;
 	private Timestamp modTime;
 }

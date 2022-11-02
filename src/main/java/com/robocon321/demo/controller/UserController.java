@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.robocon321.demo.dto.request.UserRequestDTO;
 import com.robocon321.demo.dto.response.ResponseObject;
 import com.robocon321.demo.dto.response.UserResponseDTO;
+import com.robocon321.demo.exception.BadRequestException;
 import com.robocon321.demo.service.UserService;
 
 @RestController
@@ -88,9 +91,34 @@ public class UserController {
 	public ResponseEntity<ResponseObject> post(@RequestBody @Valid UserRequestDTO userRequestDTO) {
 		ResponseObject response = new ResponseObject<>();
 		String[] roles = {"ADMIN"};
-		response.setData(userService.insertUser(userRequestDTO, roles));
+		response.setData(userService.save(userRequestDTO, roles));
 		response.setMessage("Success");
 		response.setSuccess(true);
 		return ResponseEntity.ok(response);
+	}
+
+	@PutMapping
+	public ResponseEntity<ResponseObject> put(@RequestBody @Valid UserRequestDTO userRequestDTO) {
+		ResponseObject response = new ResponseObject<>();
+		String[] roles = {"ADMIN"};
+		response.setData(userService.update(userRequestDTO, roles));
+		response.setMessage("Success");
+		response.setSuccess(true);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("{id}")
+	public ResponseEntity<ResponseObject> getById(@PathVariable String id) {
+		try {
+			Integer param = Integer.parseInt(id);			
+			ResponseObject response = new ResponseObject<>();
+			response.setData(userService.findById(param));
+			response.setMessage("Success");
+			response.setSuccess(true);
+			return ResponseEntity.ok(response);
+		} catch(Exception ex) {
+			throw new BadRequestException("Id is a number");
+		}
+		
 	}
 }

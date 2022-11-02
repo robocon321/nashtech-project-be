@@ -72,8 +72,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserResponseDTO insertUser(UserRequestDTO requestDTO, String[] roleNames) {		
-		if(requestDTO.getId() == null) throw new BadRequestException("Id must be null");
+	public UserResponseDTO save(UserRequestDTO requestDTO, String[] roleNames) {		
+		if(requestDTO.getId() != null) throw new BadRequestException("Id must be null");
+		if(requestDTO.getPassword() == null || requestDTO.getPassword().length() == 0) throw new BadRequestException("Password not blank");
+		if(requestDTO.getPassword().length() >= 20 || requestDTO.getPassword().length() <= 6) throw new BadRequestException("Size password >= 6 and <= 20");
+
 		// check exists username, email, phone
 
 		if (userRepository.existsByUsername(requestDTO.getUsername())) {
@@ -239,5 +242,58 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 			ex.printStackTrace();
 			throw new BadRequestException("Can not delete!");
 		}
+	}
+
+	@Override
+	public UserResponseDTO update(UserRequestDTO requestDTO, String[] roleNames) {	
+		Optional<User> userOpt = userRepository.findById(requestDTO.getId());
+		if(userOpt.isEmpty()) throw new BadRequestException("Not found your id");
+		User user = userOpt.get();
+		
+		if(requestDTO.getPassword() == null || requestDTO.getPassword().length() == 0) 
+			requestDTO.setPassword(user.getPassword());
+		if(requestDTO.getPassword().length() >= 20 || requestDTO.getPassword().length() <= 6) 
+			throw new BadRequestException("Size password >= 6 and <= 20");
+
+		// check exists username, email, phone
+
+		if (userRepository.existsByUsernameAndIdNot(requestDTO.getUsername(), requestDTO.getId())) {
+			throw new BadRequestException("Your username already existed!");
+		}
+
+		if (userRepository.existsByEmailAndIdNot(requestDTO.getEmail(), requestDTO.getId())) {
+			throw new BadRequestException("Your email already registered!");
+		}
+
+		if (userRepository.existsByPhoneAndIdNot(requestDTO.getPhone(), requestDTO.getId())) {
+			throw new BadRequestException("Your phone already registered!");
+		}
+
+		BeanUtils.copyProperties(requestDTO, user);
+
+		List<Role> roles = new ArrayList<>();
+
+		for (String roleName : roleNames) {
+			Optional<Role> optional = roleRepository.findOneByName(roleName);
+			if (optional.isPresent()) {
+				Role role = optional.get();
+				roles.add(role);
+			}
+			else
+				throw new NotImplementedException("Not found role " + roleName);
+		}
+		user.setRoles(roles);
+		user.setStatus(requestDTO.getStatus());
+
+		user = userRepository.save(user);
+
+		return entityToDTO(user);
+	}
+
+	@Override
+	public UserResponseDTO findById(Integer id) {
+		Optional<User> userOpt = userRepository.findById(id);
+		if(userOpt.isEmpty()) throw new BadRequestException("Not found your id");		
+		return entityToDTO(userOpt.get());
 	}
 }

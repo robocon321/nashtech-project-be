@@ -81,7 +81,7 @@ public class AuthController {
 		ResponseObject response = new ResponseObject<>();
 		// insert role to user
 		String[] roles = {"CLIENT"};
-		UserResponseDTO data = userService.insertUser(userResponseDTO, roles);
+		UserResponseDTO data = userService.save(userResponseDTO, roles);
 		response.setSuccess(true);
 		response.setMessage("Success!");
 		response.setData(data);
