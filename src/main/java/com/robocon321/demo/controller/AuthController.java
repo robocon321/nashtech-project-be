@@ -64,7 +64,7 @@ public class AuthController {
 		ResponseObject response = new ResponseObject<>();
 		
 		CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		UserResponseDTO dto = userService.findUserByIdWithRole(userDetails.getUser().getId());
+		UserResponseDTO dto = userService.findUserByIdWithRole(userDetails.getUser().getId(), 1);
 		if(dto == null) {
 			throw new BadRequestException("Not found user");
 		} else {

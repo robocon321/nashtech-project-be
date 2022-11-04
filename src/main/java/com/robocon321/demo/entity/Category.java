@@ -67,23 +67,23 @@ public class Category {
 	@Column(nullable = false)
 	private Integer status;
 
-	@Transient
-	private VisibleType visibleType;
-	
-    @PostLoad
-    void fillTransient() {
-        if (status >= 0) {
-            this.visibleType = VisibleType.of(status);
-        }
-    }
-
-    @PrePersist
-    @PreUpdate
-    void fillPersistent() {
-        if (visibleType != null) {
-            this.status = visibleType.getVisible();
-        }
-    }
+//	@Transient
+//	private VisibleType visibleType;
+//	
+//    @PostLoad
+//    void fillTransient() {
+//        if (status >= 0) {
+//            this.visibleType = VisibleType.of(status);
+//        }
+//    }
+//
+//    @PrePersist
+//    @PreUpdate
+//    void fillPersistent() {
+//        if (visibleType != null) {
+//            this.status = visibleType.getVisible();
+//        }
+//    }
 	
 	@CreatedDate
 	@Column(nullable = false)

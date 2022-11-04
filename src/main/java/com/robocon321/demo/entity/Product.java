@@ -93,23 +93,23 @@ public class Product {
 	@Column(nullable = false)
 	private Integer status;
 	
-	@Transient
-	private VisibleType visibleType;
-	
-    @PostLoad
-    void fillTransient() {
-        if (status >= 0) {
-            this.visibleType = VisibleType.of(status);
-        }
-    }
-
-    @PrePersist
-    @PreUpdate
-    void fillPersistent() {
-        if (visibleType != null) {
-            this.status = this.visibleType.getVisible();
-        }
-    }
+//	@Transient
+//	private VisibleType visibleType;
+//	
+//    @PostLoad
+//    void fillTransient() {
+//        if (status >= 0) {
+//            this.visibleType = VisibleType.of(status);
+//        }
+//    }
+//
+//    @PrePersist
+//    @PreUpdate
+//    void fillPersistent() {
+//        if (visibleType != null) {
+//            this.status = this.visibleType.getVisible();
+//        }
+//    }
 	    
 	@CreatedDate
 	@Column(nullable = false)
@@ -135,12 +135,11 @@ public class Product {
 	@JoinTable(name = "`category_product`", joinColumns = @JoinColumn(name = "product_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "category_id", nullable = false))
 	private List<Category> categories = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "product", targetEntity = ProductImage.class, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "product", targetEntity = ProductImage.class)
 	private List<ProductImage> gallery = new ArrayList<>();
 	
 	@OneToMany(
-			cascade = CascadeType.ALL, 
-			mappedBy = "product", 
+			mappedBy = "product",
 			targetEntity = CartItem.class)
 	private List<CartItem> cartItems = new ArrayList<>();
 	

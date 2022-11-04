@@ -46,15 +46,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByUsername(username);
-		if (user == null) {
+		Optional<User> userOpt = userRepository.findOneByUsernameAndStatus(username, 1);
+		if (userOpt.isEmpty()) {
 			throw new NotfoundException("Username or password is incorrect!");
 		}
-		return new CustomUserDetails(user);
+		return new CustomUserDetails(userOpt.get());
 	}
 
 	public UserDetails loadUserById(int userId) throws UsernameNotFoundException {
-		Optional<User> optional = userRepository.findById(userId);
+		Optional<User> optional = userRepository.findOneByIdAndStatus(userId, 1);
 		if (optional.isEmpty()) {
 			throw new NotfoundException(userId + " not found");
 		}
@@ -62,8 +62,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 	}
 
 	@Override
-	public UserResponseDTO findUserByIdWithRole(Integer userId) {
-		Optional<User> optional = userRepository.findById(userId);
+	public UserResponseDTO findUserByIdWithRole(Integer userId, Integer status) {
+		Optional<User> optional = userRepository.findOneByIdAndStatus(userId, status);
 		if (optional.isPresent()) {
 			return entityToDTOWithRole(optional.get());
 		} else {
@@ -84,11 +84,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		}
 
 		if (userRepository.existsByEmail(requestDTO.getEmail())) {
-			throw new BadRequestException("Your email already registered!");
+			throw new BadRequestException("Your email already existed!");
 		}
 
 		if (userRepository.existsByPhone(requestDTO.getPhone())) {
-			throw new BadRequestException("Your phone already registered!");
+			throw new BadRequestException("Your phone already existed!");
 		}
 
 		User user = new User();
@@ -211,20 +211,14 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 			sortType = "asc";
 		}
 
-		Page<User> pageResponse = userRepository.findAll(spec, PageRequest.of(page, size,
+		Page<User> pageUser = userRepository.findAll(spec, PageRequest.of(page, size,
 				sortType.equals("desc") ? Sort.by(sortName).descending() : Sort.by(sortName).ascending()));
 
-		return pageEntityToDTO(pageResponse);
+		return pageEntityToDTO(pageUser);
 	}
 
 	private Page<UserResponseDTO> pageEntityToDTO(Page<User> page) {
 		return page.map(user -> entityToDTO(user));
-	}
-
-	private List<UserResponseDTO> entitiesToDTOs(List<User> users) {
-		return users.stream().map(item -> {
-			return entityToDTO(item);
-		}).toList();
 	}
 
 	private UserResponseDTO entityToDTO(User user) {
@@ -262,11 +256,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		}
 
 		if (userRepository.existsByEmailAndIdNot(requestDTO.getEmail(), requestDTO.getId())) {
-			throw new BadRequestException("Your email already registered!");
+			throw new BadRequestException("Your email already existed!");
 		}
 
 		if (userRepository.existsByPhoneAndIdNot(requestDTO.getPhone(), requestDTO.getId())) {
-			throw new BadRequestException("Your phone already registered!");
+			throw new BadRequestException("Your phone already existed!");
 		}
 
 		BeanUtils.copyProperties(requestDTO, user);

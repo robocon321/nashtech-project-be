@@ -30,7 +30,8 @@ public class ProductResponseDTO {
 	private String metaTitle;
 	private String metaKeyword;
 	private String metaDescription;
-	private VisibleType visibleType;
+//	private VisibleType visibleType;
+	private Integer status;
 	private Timestamp createTime;
 	private Timestamp modTime;
 	

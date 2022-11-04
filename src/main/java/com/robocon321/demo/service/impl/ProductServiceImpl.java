@@ -161,7 +161,7 @@ public class ProductServiceImpl implements ProductService {
 		String thumbnail = UUID.randomUUID().toString() + "-" + SaveFileHelper.getNameMultipart(dto.getThumbnail());	
 		
 		BeanUtils.copyProperties(dto, product);
-		product.setVisibleType(VisibleType.VISIBLE);
+		product.setStatus(1);
 		product.setThumbnail(thumbnail);
 		
 		// set category
@@ -231,7 +231,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		if(productRequestDTO.getId() == null) {
 			throw new BadRequestException("Id not found");
-		}	
+		}
 		
 		if(productRepository.existsBySlugAndIdNot(productRequestDTO.getSlug(), productRequestDTO.getId())) {
 			throw new ConflictException("Your slug already exists");
@@ -330,7 +330,7 @@ public class ProductServiceImpl implements ProductService {
 			
 			return productResponseDTO;			
 		} else {
-			throw new BadRequestException("Id not found");
+			throw new BadRequestException("Product with this id not found");
 		}
 		
 	}

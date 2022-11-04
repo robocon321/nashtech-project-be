@@ -73,7 +73,8 @@ public class ProductRequestDTO {
 	@Size(max = 500, message = "Meta description less 500 letters")
 	private String metaDescription;
 
-	private VisibleType visibleType;
+//	private VisibleType visibleType;
+	private Integer status;
 	private List<Integer> categories = new ArrayList<>();
 	private List<MultipartFile> gallery = new ArrayList<>();
 }

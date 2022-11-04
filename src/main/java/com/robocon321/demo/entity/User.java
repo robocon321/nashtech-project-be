@@ -23,10 +23,12 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -78,15 +80,13 @@ public class User {
 	private List<Role> roles = new ArrayList<>();
 	
 	@OneToMany(
-			cascade = CascadeType.ALL, 
 			mappedBy = "user", 
 			targetEntity = Contact.class)
 	private List<Contact> contacts = new ArrayList<>();
 	
 	@OneToMany(
 			mappedBy = "user", 
-			targetEntity = Cart.class, 
-			cascade = CascadeType.ALL)
+			targetEntity = Cart.class)
 	private List<Cart> carts = new ArrayList<>();
 	
 	@OneToMany(

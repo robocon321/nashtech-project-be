@@ -54,13 +54,11 @@ public class Cart {
 	private User user;
 	
 	@OneToMany(
-			cascade = CascadeType.ALL, 
 			mappedBy = "cart", 
 			targetEntity = CartItem.class)
 	private List<CartItem> cartItems = new ArrayList<>();
 
 	@OneToOne(
-			cascade = CascadeType.ALL,
 			mappedBy = "cart", 
 			targetEntity = Transaction.class)
 	private Transaction order;

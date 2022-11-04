@@ -2,6 +2,7 @@ package com.robocon321.demo.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,7 +123,7 @@ public class CategoryServiceImpl implements CategoryService {
 		}			
 		Category category = new Category();			
 		BeanUtils.copyProperties(categoryRequestDTO, category);
-		category.setVisibleType(VisibleType.VISIBLE);
+		category.setStatus(1);
 		
 		category = categoryRepository.save(category);
 		CategoryResponseDTO categoryResponseDTO = new CategoryResponseDTO();
@@ -150,9 +151,12 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryResponseDTO update(CategoryRequestDTO dto) {
+		Optional<Category> categoryOpt = categoryRepository.findById(dto.getId());
 		if(dto.getId() == null) {
 			throw new BadRequestException("Category must contain id");
 		}
+		
+		if(categoryOpt.isEmpty()) throw new BadRequestException("Not found this category id");
 		
 		if(categoryRepository.existsByNameAndIdNot(dto.getName(), dto.getId())) {
 			throw new ConflictException("Your category name already exists");
@@ -162,7 +166,7 @@ public class CategoryServiceImpl implements CategoryService {
 			throw new ConflictException("Your slug already exists");
 		}
 				
-		Category category = new Category();
+		Category category = categoryOpt.get();
 		BeanUtils.copyProperties(dto, category);
 		
 		category = categoryRepository.save(category);
@@ -185,7 +189,6 @@ public class CategoryServiceImpl implements CategoryService {
 			
 			Category category = new Category();			
 			BeanUtils.copyProperties(item, category);
-			category.setVisibleType(VisibleType.VISIBLE);
 			category.setId(null);
 			return category;
 		}).toList();

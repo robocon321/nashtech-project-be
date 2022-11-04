@@ -1,7 +1,5 @@
 package com.robocon321.demo.dto.request;
 
-import java.sql.Timestamp;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -42,7 +40,8 @@ public class CategoryRequestDTO {
 	@Size(max = 500, message = "Meta description less 500 letters")
 	private String metaDescription;
 	
-	private VisibleType visibleType;
+//	private VisibleType visibleType;
+	private Integer status;
 	private CategoryRequestDTO parent;
 
 }

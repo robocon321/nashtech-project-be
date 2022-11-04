@@ -44,11 +44,11 @@ public class Transaction {
 	@Column(nullable = false)
 	private Timestamp createTime;
 	
-	@OneToOne(cascade = CascadeType.ALL, targetEntity = Shipping.class)
+	@OneToOne(targetEntity = Shipping.class)
 	@JoinColumn(name = "shipping_id", nullable = false)
 	private Shipping shipping;
 	
-	@OneToOne(cascade = CascadeType.ALL, targetEntity = Cart.class)
+	@OneToOne(targetEntity = Cart.class)
 	@JoinColumn(name = "cart_id", nullable = false)
 	private Cart cart;
 }

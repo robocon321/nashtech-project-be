@@ -67,11 +67,29 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		config.setAllowedOrigins(List.of("http://localhost:3000"));
 
 		http.authorizeRequests()
+		.antMatchers(HttpMethod.GET, "/users/**").hasAnyAuthority("ADMIN", "CLIENT")
+		.antMatchers(HttpMethod.POST, "/users").hasAnyAuthority("ADMIN", "CLIENT")
+		.antMatchers(HttpMethod.PUT, "/users").hasAnyAuthority("ADMIN", "CLIENT")
+		.antMatchers(HttpMethod.DELETE, "/users").hasAnyAuthority("ADMIN")
+
+		.antMatchers(HttpMethod.PUT, "/products").hasAnyAuthority("ADMIN")
+		.antMatchers(HttpMethod.POST, "/products").hasAnyAuthority("ADMIN")
+		.antMatchers(HttpMethod.DELETE, "/products").hasAnyAuthority("ADMIN")
+
+		.antMatchers(HttpMethod.PUT, "/categories").hasAnyAuthority("ADMIN")
 		.antMatchers(HttpMethod.POST, "/categories").hasAnyAuthority("ADMIN")
 		.antMatchers(HttpMethod.DELETE, "/categories").hasAnyAuthority("ADMIN")
+		
+		.antMatchers(HttpMethod.PUT, "/cart_items").hasAnyAuthority("CLIENT")
+		.antMatchers(HttpMethod.POST, "/cart_items").hasAnyAuthority("CLIENT")
+		.antMatchers(HttpMethod.DELETE, "/cart_items").hasAnyAuthority("CLIENT")
+		
 		.antMatchers(HttpMethod.POST, "/ratings").hasAnyAuthority("CLIENT")
-		.antMatchers("/contacts").hasAnyAuthority("CLIENT")
-		.antMatchers(HttpMethod.GET, "/carts").hasAnyAuthority("CLIENT", "ADMIN")
+
+		.antMatchers(HttpMethod.POST, "/contacts").hasAnyAuthority("CLIENT")
+
+		.antMatchers(HttpMethod.GET, "/carts/cart_item/product").hasAnyAuthority("CLIENT", "ADMIN")
+		
 		.antMatchers("/**").permitAll()
 		.and().csrf().disable().cors().configurationSource(request -> config);
 
