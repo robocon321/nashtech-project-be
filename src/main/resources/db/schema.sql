@@ -63,7 +63,7 @@ CREATE TABLE `product` (
 	`thumbnail` VARCHAR(2048) NOT NULL,
 	`real_price` DOUBLE NOT NULL,
 	`sell_price` DOUBLE NOT NULL,
-	`short_description` VARCHAR(512) NOT NULL,
+	`description` VARCHAR(512) NOT NULL,
 	`full_description` TEXT NOT NULL,
 	`stock` INT NOT NULL,
 	`width` DOUBLE NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE `product` (
 	`meta_title` VARCHAR(100),
 	`meta_keyword` VARCHAR(300),
 	`meta_description` VARCHAR(500),
-	`status` BIT NOT NULL,
+	`status` BIT NOT NULL DEFAULT 1,
 	`create_time` DATETIME NOT NULL,
 	`mod_time` DATETIME NOT NULL
 ) ;
@@ -97,7 +97,7 @@ CREATE TABLE `rating` (
 	`id` INT PRIMARY KEY AUTO_INCREMENT,
 	`product_id` INT NOT NULL,
 	`user_id` INT NOT NULL,
-	`star` BIT NOT NULL,
+	`star` INT NOT NULL,
 	`content` VARCHAR(1024) NOT NULL,
 	`create_time` DATETIME NOT NULL
 );
@@ -150,71 +150,44 @@ CREATE TABLE `setting` (
 
 
 ALTER TABLE `contact`
-ADD FOREIGN KEY (`user_id`) REFERENCES `user`(`id`) 
-ON DELETE CASCADE
-ON UPDATE SET NULL;
+ADD FOREIGN KEY (`user_id`) REFERENCES `user`(`id`);
 
 ALTER TABLE `user_role`
-ADD FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
-ON DELETE CASCADE
-ON UPDATE SET NULL;
+ADD FOREIGN KEY (`user_id`) REFERENCES `user`(`id`);
 
 ALTER TABLE `user_role`
-ADD FOREIGN KEY (`role_id`) REFERENCES `role`(`id`)
-ON DELETE CASCADE
-ON UPDATE SET NULL;
+ADD FOREIGN KEY (`role_id`) REFERENCES `role`(`id`);
 
 ALTER TABLE `category`
-ADD FOREIGN KEY (`parent_id`) REFERENCES `category`(`id`)
-ON DELETE SET NULL
-ON UPDATE SET NULL;
+ADD FOREIGN KEY (`parent_id`) REFERENCES `category`(`id`);
 
 ALTER TABLE `category_product`
-ADD FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
-ON DELETE CASCADE
-ON UPDATE SET NULL;
+ADD FOREIGN KEY (`product_id`) REFERENCES `product`(`id`);
 
 ALTER TABLE `category_product`
-ADD FOREIGN KEY (`category_id`) REFERENCES `category`(`id`)
-ON DELETE CASCADE
-ON UPDATE SET NULL;
+ADD FOREIGN KEY (`category_id`) REFERENCES `category`(`id`);
 
 ALTER TABLE `product_image`
-ADD FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
-ON DELETE CASCADE
-ON UPDATE SET NULL;
+ADD FOREIGN KEY (`product_id`) REFERENCES `product`(`id`);
 
 ALTER TABLE `rating`
-ADD FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
-ON DELETE CASCADE
-ON UPDATE SET NULL;
+ADD FOREIGN KEY (`product_id`) REFERENCES `product`(`id`);
 
 ALTER TABLE `rating`
-ADD FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
-ON DELETE SET NULL
-ON UPDATE SET NULL;
+ADD FOREIGN KEY (`user_id`) REFERENCES `user`(`id`);
 
 ALTER TABLE `cart`
-ADD FOREIGN KEY (`user_id`) REFERENCES `user`(`id`)
-ON DELETE CASCADE
-ON UPDATE SET NULL;
+ADD FOREIGN KEY (`user_id`) REFERENCES `user`(`id`);
 
 ALTER TABLE `cart_item`
-ADD FOREIGN KEY (`product_id`) REFERENCES `product`(`id`)
-ON DELETE CASCADE
-ON UPDATE SET NULL;
+ADD FOREIGN KEY (`product_id`) REFERENCES `product`(`id`);
 
 ALTER TABLE `cart_item`
-ADD FOREIGN KEY (`cart_id`) REFERENCES `cart`(`id`)
-ON DELETE CASCADE
-ON UPDATE SET NULL;
+ADD FOREIGN KEY (`cart_id`) REFERENCES `cart`(`id`);
 
-ALTER TABLE `order`
-ADD FOREIGN KEY (`cart_id`) REFERENCES `cart`(`id`)
-ON DELETE CASCADE
-ON UPDATE SET NULL;
+ALTER TABLE `transaction`
+ADD FOREIGN KEY (`cart_id`) REFERENCES `cart`(`id`);
 
-ALTER TABLE `order`
-ADD FOREIGN KEY (`shipping_id`) REFERENCES `shipping`(`id`)
-ON DELETE CASCADE
-ON UPDATE SET NULL;
+ALTER TABLE `transaction`
+ADD FOREIGN KEY (`shipping_id`) REFERENCES `shipping`(`id`);
+
