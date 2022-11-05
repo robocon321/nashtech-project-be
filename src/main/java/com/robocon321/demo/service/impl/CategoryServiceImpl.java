@@ -133,12 +133,6 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public List<CategoryResponseDTO> update(List<CategoryRequestDTO> categoryDTOs) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public boolean delete(List<Integer> ids) throws BadRequestException {
 		try {
 			categoryRepository.deleteAllById(ids);
@@ -175,38 +169,10 @@ public class CategoryServiceImpl implements CategoryService {
 		
 		return categoryResponseDTO;	
 	}
-
-	@Override
-	public List<CategoryResponseDTO> save(List<CategoryRequestDTO> categoryRequestDTOs) throws BadRequestException{
-		List<Category> categories = categoryRequestDTOs.stream().map(item -> {
-			if(categoryRepository.existsByName(item.getName())) {
-				throw new ConflictException("Your category name already exists");
-			}
-
-			if(categoryRepository.existsBySlug(item.getSlug())) {
-				throw new ConflictException("Your slug already exists");
-			}		
-			
-			Category category = new Category();			
-			BeanUtils.copyProperties(item, category);
-			category.setId(null);
-			return category;
-		}).toList();
-		
-		categories = categoryRepository.saveAll(categories);
-		
-		return entitiesToDTOs(categories);
-	}
 	
 	private Page<CategoryResponseDTO> pageEntityToDTO(Page<Category> page) {
 		return page.map(category -> entityToDTO(category));
-	}
-	 
-	private List<CategoryResponseDTO> entitiesToDTOs(List<Category> categories) {
-		return categories.stream().map(item -> {
-			return entityToDTO(item);
-		}).toList();
-	}
+	}	 
 	
 	private CategoryResponseDTO entityToDTO(Category category) {
 		CategoryResponseDTO dto = new CategoryResponseDTO();
