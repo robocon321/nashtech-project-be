@@ -350,12 +350,6 @@ public class ProductServiceImpl implements ProductService {
 	private Page<ProductResponseDTO> pageEntityToDTO(Page<Product> page) {
 		return page.map(product -> entityToDTO(product));
 	}
-	 
-	private List<ProductResponseDTO> entitiesToDTOs(List<Product> products) {
-		return products.stream().map(item -> {
-			return entityToDTO(item);
-		}).toList();
-	}
 	
 	private ProductResponseDTO entityToDTO(Product product) {
 		ProductResponseDTO dto = new ProductResponseDTO();
