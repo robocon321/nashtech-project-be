@@ -47,15 +47,6 @@ public class UserControllerTest {
 	public static final MediaType APPLICATION_JSON_UTF8 = MediaType.APPLICATION_JSON;
 
 	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
-	private RoleRepository roleRepository;
-
-	@Autowired
-	private UserDetailsService userDetailsService;
-
-	@Autowired
 	private MockMvc mockMvc;
 
 	@Mock
@@ -136,9 +127,6 @@ public class UserControllerTest {
 	@WithMockUser(value="aladin1212",roles={"ADMIN"})
 	public void post_RequestInvalid() throws Exception {
 		UserRequestDTO userRequestDTO = new UserRequestDTO();
-		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization",
-				"Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjY3MDI3ODgzfQ.-QdC7_7KaISDwpbQN8QcuZ12at0DxTqzmmV3z4VwQTg");
 
 		mockMvc.perform(MockMvcRequestBuilders.post("/users").contentType(MediaType.APPLICATION_JSON)
 				.content(mapper.writeValueAsString(userRequestDTO))).andExpect(status().is(400));

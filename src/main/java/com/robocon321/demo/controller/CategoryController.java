@@ -45,6 +45,7 @@ public class CategoryController {
 		try {
 			if (request.containsKey("size")) {
 				size = Integer.parseInt(request.get("size"));
+				if(size < 0) size = 10;
 				request.remove("size");
 			}
 		} catch (Exception e) {
