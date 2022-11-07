@@ -13,10 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.web.cors.CorsConfiguration;
 
+import com.robocon321.demo.handler.OAuth2LoginSuccessHandler;
 import com.robocon321.demo.security.JwtAuthenticationFilter;
+import com.robocon321.demo.service.impl.CustomOauth2UserService;
 import com.robocon321.demo.service.impl.UserServiceImpl;
 
 @EnableWebSecurity
@@ -24,6 +25,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	UserServiceImpl userService;
 	
+	@Autowired 
+	private CustomOauth2UserService oAuth2UserService;
+	
+	@Autowired 
+	private OAuth2LoginSuccessHandler oauth2LoginHandler;
+
+
 	@Bean
 	public JwtAuthenticationFilter jwtAuthenticationFilter() {
 		return new JwtAuthenticationFilter();
@@ -91,20 +99,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers(HttpMethod.GET, "/carts/cart_item/product").hasAnyAuthority("CLIENT", "ADMIN")
 		
 		.antMatchers("/**").permitAll()
-		.and().csrf().disable().cors().configurationSource(request -> config);
+		
+		.and().csrf().disable().cors().configurationSource(request -> config)
+		.and()
+		.oauth2Login()
+		.loginPage("/login")
+		.userInfoEndpoint()
+		.userService(oAuth2UserService)
+		.and()
+		.successHandler(oauth2LoginHandler);
 
 		
 		http.headers().frameOptions().disable();
 		http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
 	}
 
-//    @Bean
-//    public StrictHttpFirewall httpFirewall() {
-//        StrictHttpFirewall firewall = new StrictHttpFirewall();
-//        firewall.setAllowedHeaderNames((header) -> true);
-//        firewall.setAllowedHeaderValues((header) -> true);
-//        firewall.setAllowedParameterNames((parameter) -> true);
-//        return firewall;
-//    }
 }

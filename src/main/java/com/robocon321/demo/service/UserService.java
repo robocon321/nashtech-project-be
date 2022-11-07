@@ -16,5 +16,6 @@ public interface UserService {
 	public boolean delete(List<Integer> ids);
 	public UserResponseDTO update(UserRequestDTO userResponseDTO, String[] roleName);
 	public UserResponseDTO findById(Integer id);
+	public boolean resetPassword(String email);
 }
 	

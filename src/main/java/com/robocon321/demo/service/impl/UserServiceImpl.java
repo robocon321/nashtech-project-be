@@ -16,12 +16,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.robocon321.demo.dto.EmailDetails;
 import com.robocon321.demo.dto.FilterCriteria;
 import com.robocon321.demo.dto.request.UserRequestDTO;
-import com.robocon321.demo.dto.response.CategoryResponseDTO;
 import com.robocon321.demo.dto.response.RoleResponseDTO;
 import com.robocon321.demo.dto.response.UserResponseDTO;
-import com.robocon321.demo.entity.Category;
 import com.robocon321.demo.entity.Role;
 import com.robocon321.demo.entity.User;
 import com.robocon321.demo.exception.BadRequestException;
@@ -30,10 +29,11 @@ import com.robocon321.demo.exception.NotfoundException;
 import com.robocon321.demo.repository.RoleRepository;
 import com.robocon321.demo.repository.UserRepository;
 import com.robocon321.demo.security.CustomUserDetails;
+import com.robocon321.demo.service.EmailService;
 import com.robocon321.demo.service.UserService;
-import com.robocon321.demo.specs.CategorySpecification;
 import com.robocon321.demo.specs.UserSpecification;
 import com.robocon321.demo.type.FilterOperateType;
+import com.robocon321.demo.util.RandomString;
 
 @Service
 public class UserServiceImpl implements UserDetailsService, UserService {
@@ -43,6 +43,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
 	@Autowired
 	private RoleRepository roleRepository;
+	
+	@Autowired
+	private EmailService emailService;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -289,5 +292,23 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		Optional<User> userOpt = userRepository.findById(id);
 		if(userOpt.isEmpty()) throw new BadRequestException("Not found your id");		
 		return entityToDTO(userOpt.get());
+	}
+
+	@Override
+	public boolean resetPassword(String email) {
+		System.out.println(email);
+		Optional<User> userOpt = userRepository.findOneByEmailAndStatus(email, 1);
+		if(userOpt.isPresent()) {
+			String newPassword = RandomString.randomPassword(10);
+			userOpt.get().setPassword(newPassword);			
+			userRepository.save(userOpt.get());
+			EmailDetails emailDetails = new EmailDetails();
+			emailDetails.setSendTo(email);
+			emailDetails.setSubject("Reset password at TienDa website");
+			emailDetails.setContent("Your new password: " + newPassword);
+			emailService.sendSimpleMail(emailDetails);
+			return true;
+		}
+		else throw new BadRequestException("Your email not exists");
 	}
 }
