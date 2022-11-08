@@ -311,4 +311,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 		}
 		else throw new BadRequestException("Your email not exists");
 	}
+
+	@Override
+	public Optional<User> findUserByEmail(String email) {
+		return userRepository.findOneByEmail(email);
+	}
 }
