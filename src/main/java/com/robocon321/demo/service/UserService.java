@@ -2,6 +2,7 @@ package com.robocon321.demo.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
@@ -17,5 +18,6 @@ public interface UserService {
 	public UserResponseDTO update(UserRequestDTO userResponseDTO, String[] roleName);
 	public UserResponseDTO findById(Integer id);
 	public boolean resetPassword(String email);
+	public Optional<User> findUserByEmail(String email);
 }
 	
