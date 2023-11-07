@@ -72,8 +72,8 @@ CREATE TABLE `product` (
 	`weight` DOUBLE NOT NULL,
 	`slug` VARCHAR(100) NOT NULL,
 	`meta_title` VARCHAR(100),
-	`meta_keyword` VARCHAR(300),
-	`meta_description` VARCHAR(500),
+	`meta_keyword` VARCHAR(700),
+	`meta_description` VARCHAR(1500),
 	`status` BIT NOT NULL DEFAULT 1,
 	`create_time` DATETIME NOT NULL,
 	`mod_time` DATETIME NOT NULL
@@ -126,7 +126,7 @@ CREATE TABLE `transaction` (
 	`shipping_id` INT NOT NULL,
 	`product_price` INT NOT NULL,
 	`ship_price` INT NOT NULL,
-	`status` BIT NOT NULL,
+	`status` INT NOT NULL,
 	`create_time` DATETIME NOT NULL
 );
 

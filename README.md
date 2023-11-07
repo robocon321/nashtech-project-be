@@ -2,12 +2,6 @@
 # Nashtech project backend
 
 
-
-
-
-
-
-
 ## Documentation
 
 [Appendix](#appendix)
